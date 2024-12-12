@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
+import { UserAvatar } from "@/components/UserAvatar"
 import { 
   TrophyIcon,
   BanknotesIcon,
@@ -13,22 +14,22 @@ import {
 } from "@heroicons/react/24/outline"
 import { ShieldCheckIcon } from "@heroicons/react/24/solid"
 
-// interface Author {
-//   id: string
-//   name: string | null
-//   image: string | null
-//   role: string | null
-//   createdAt: string
-//   isMonetized: boolean
-//   totalEarnings: number
-// }
+interface Author {
+  id: string
+  name: string | null
+  image: string | null
+  role: string | null
+  createdAt: string
+  isMonetized: boolean
+  totalEarnings: number
+}
 
-// interface Stats {
-//   totalViews: number
-//   totalReactions: number
-//   totalComments: number
-//   totalPosts: number
-// }
+interface Stats {
+  totalViews: number
+  totalReactions: number
+  totalComments: number
+  totalPosts: number
+}
 
 interface Post {
   id: string
@@ -41,15 +42,20 @@ interface Post {
     name: string
     slug: string
   }[]
-  createdAt?: string
-  stats: {
-    views: number
-    reactions: number
-    comments: number
-  }
+  createdAt: string
+  viewCount: number
+  reactionCount: number
+  commentCount: number
+  shareCount: number
 }
 
-async function getAuthorData(id: string) {
+interface AuthorData {
+  author: Author
+  stats: Stats
+  posts: Post[]
+}
+
+async function getAuthorData(id: string): Promise<AuthorData | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const res = await fetch(`${baseUrl}/api/articles/authors/${id}`, {
@@ -68,234 +74,170 @@ async function getAuthorData(id: string) {
   }
 }
 
-// Generate Metadata
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const data = await getAuthorData(params.id);
+  const data = await getAuthorData(params.id)
+  if (!data) return { title: 'Author Not Found' }
+
+  const { author, stats } = data
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yourplatform.com'
   
-  if (!data) {
-    return {
-      title: "Author Not Found",
-      description: "The requested author profile could not be found."
-    };
-  }
-
-  const { author, stats } = data;
-  const isMonetized = author.isMonetized ? "Monetized Creator" : "Content Creator";
-  const joinDate = new Date(author.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-
   return {
-    title: `${author.name} - ${isMonetized} | Independent Journalism Platform`,
-    description: `Read articles by ${author.name}. ${stats.totalPosts} quality articles with ${stats.totalViews.toLocaleString()} views. Member since ${joinDate}.`,
+    title: `${author.name} - Independent Journalism Platform`,
+    description: `Read articles by ${author.name}. ${stats.totalPosts} articles published with ${stats.totalViews.toLocaleString()} total views.`,
     keywords: [
-      author.name.toLowerCase(),
-      "independent journalist",
-      "content creator",
-      "blog writer",
-      "expert author",
-      isMonetized.toLowerCase(),
-      "quality content",
-      "independent voice",
-      "professional writer",
-      "thought leader"
+      author.name || '',
+      'independent journalist',
+      'content creator',
+      'articles',
+      'blog posts',
+      'independent journalism'
     ],
-    authors: [{ name: author.name }],
+    authors: [{ name: author.name || '' }],
     openGraph: {
-      title: `${author.name} - ${isMonetized}`,
-      description: `Read articles by ${author.name}. ${stats.totalPosts} quality articles with ${stats.totalViews.toLocaleString()} views.`,
-      url: `https://yourplatform.com/authors/${author.id}`,
+      title: `${author.name} - Independent Journalism Platform`,
+      description: `Read articles by ${author.name}. ${stats.totalPosts} articles published with ${stats.totalViews.toLocaleString()} total views.`,
+      url: `${baseUrl}/authors/${author.id}`,
+      siteName: 'Independent Journalism Platform',
       images: [
         {
-          url: author.image || "/default-author-og.jpg",
+          url: author.image || `${baseUrl}/default-author.jpg`,
           width: 1200,
           height: 630,
-          alt: author.name,
+          alt: `${author.name}'s profile picture`
         }
       ],
-      type: "profile",
+      locale: 'en_US',
+      type: 'profile',
     },
     twitter: {
-      card: "summary_large_image",
-      title: `${author.name} - ${isMonetized}`,
-      description: `Read articles by ${author.name}. ${stats.totalPosts} quality articles with ${stats.totalViews.toLocaleString()} views.`,
-      images: [author.image || "/default-author-og.jpg"],
-      creator: "@yourplatform",
+      card: 'summary_large_image',
+      title: `${author.name} - Independent Journalism Platform`,
+      description: `Read articles by ${author.name}. ${stats.totalPosts} articles published with ${stats.totalViews.toLocaleString()} total views.`,
+      images: [author.image || `${baseUrl}/default-author.jpg`],
+      creator: '@yourplatform',
     },
     alternates: {
-      canonical: `https://yourplatform.com/authors/${author.id}`,
-    }
-  };
+      canonical: `${baseUrl}/authors/${author.id}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  }
 }
 
-export default async function AuthorPage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function AuthorPage({ params }: { params: { id: string } }) {
   const data = await getAuthorData(params.id)
   if (!data) notFound()
 
-  const { author, stats, popularPosts, posts } = data
+  const { author, stats, posts } = data
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yourplatform.com'
+  const featuredPosts = posts.slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Author Header */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10 py-12">
-          <div className="flex flex-col md:flex-row md:items-center gap-8">
-            <div className="relative">
-              {author.image ? (
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-lg opacity-20 animate-pulse" />
-                  <Image
-                    src={author.image}
-                    alt={author.name || ''}
-                    width={120}
-                    height={120}
-                    className="rounded-full ring-4 ring-white shadow-xl relative"
-                  />
-                </div>
-              ) : (
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-lg opacity-20 animate-pulse" />
-                  <div className="w-30 h-30 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center ring-4 ring-white shadow-xl relative">
-                    <span className="text-4xl font-medium text-blue-600">
-                      {author.name?.[0]?.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {author.role === 'admin' && (
-                <div className="absolute -top-2 -right-2">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-blue-500 rounded-full blur-sm opacity-20" />
-                    <ShieldCheckIcon className="w-8 h-8 text-blue-600 drop-shadow-lg" />
-                  </div>
-                </div>
-              )}
-            </div>
-            <div>
-              <div className="space-y-3">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
-                    {author.name}
-                  </h1>
-                  {author.isMonetized && (
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full border border-green-200 shadow-sm">
-                      <BanknotesIcon className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-green-700">Monetized Creator</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
-                    <CalendarIcon className="w-4 h-4" />
-                    <span>Joined {new Date(author.createdAt).toLocaleDateString('en-US', {
-                      month: 'long',
-                      year: 'numeric'
-                    })}</span>
-                  </div>
-                  {author.isMonetized && (
-                    <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full">
-                      <BanknotesIcon className="w-4 h-4 text-blue-600" />
-                      <span className="text-blue-700">${author.totalEarnings.toFixed(2)} earned</span>
-                    </div>
-                  )}
-                </div>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Author Profile */}
+        <div className="bg-white rounded-xl shadow-sm p-8">
+          <div className="flex items-start gap-8">
+            {author.image && (
+              <Image
+                src={author.image}
+                alt={author.name || ''}
+                width={120}
+                height={120}
+                className="rounded-full"
+              />
+            )}
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900">{author.name}</h1>
+                {author.role === 'admin' && (
+                  <ShieldCheckIcon className="w-6 h-6 text-blue-600" />
+                )}
               </div>
-
-              {/* Author Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <DocumentTextIcon className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <span className="font-medium">Posts</span>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalPosts}</p>
+              <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                <CalendarIcon className="w-4 h-4" />
+                <span>Joined {new Date(author.createdAt).toLocaleDateString()}</span>
+              </div>
+              {author.isMonetized && (
+                <div className="flex items-center gap-2 text-green-600 mb-6">
+                  <BanknotesIcon className="w-5 h-5" />
+                  <span className="font-medium">Monetized Creator</span>
                 </div>
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
-                    <div className="p-2 bg-indigo-50 rounded-lg">
-                      <EyeIcon className="w-5 h-5 text-indigo-600" />
-                    </div>
-                    <span className="font-medium">Views</span>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalViews.toLocaleString()}</p>
+              )}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                  <DocumentTextIcon className="w-6 h-6 text-gray-400 mb-2" />
+                  <span className="text-2xl font-bold text-gray-900">{stats.totalPosts}</span>
+                  <span className="text-sm text-gray-500">Articles</span>
                 </div>
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
-                    <div className="p-2 bg-pink-50 rounded-lg">
-                      <HeartIcon className="w-5 h-5 text-pink-600" />
-                    </div>
-                    <span className="font-medium">Reactions</span>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalReactions.toLocaleString()}</p>
+                <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                  <EyeIcon className="w-6 h-6 text-gray-400 mb-2" />
+                  <span className="text-2xl font-bold text-gray-900">{stats.totalViews.toLocaleString()}</span>
+                  <span className="text-sm text-gray-500">Views</span>
                 </div>
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
-                    <div className="p-2 bg-purple-50 rounded-lg">
-                      <ChatBubbleLeftIcon className="w-5 h-5 text-purple-600" />
-                    </div>
-                    <span className="font-medium">Comments</span>
-                  </div>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalComments.toLocaleString()}</p>
+                <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                  <HeartIcon className="w-6 h-6 text-gray-400 mb-2" />
+                  <span className="text-2xl font-bold text-gray-900">{stats.totalReactions.toLocaleString()}</span>
+                  <span className="text-sm text-gray-500">Reactions</span>
+                </div>
+                <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                  <ChatBubbleLeftIcon className="w-6 h-6 text-gray-400 mb-2" />
+                  <span className="text-2xl font-bold text-gray-900">{stats.totalComments.toLocaleString()}</span>
+                  <span className="text-sm text-gray-500">Comments</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10 py-12 space-y-12">
-        {/* Popular Posts */}
+        {/* Featured Posts */}
         <div>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-lg shadow-lg">
-              <TrophyIcon className="w-6 h-6 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">Most Popular Articles</h2>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Articles</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {popularPosts.map((post: Post) => (
+            {featuredPosts.map((post) => (
               <Link 
                 key={post.id}
                 href={`/article/${post.slug}`}
-                className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-200 hover:border-blue-200"
+                className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
               >
-                <div className="relative h-48">
-                  {post.image ? (
+                {post.image && (
+                  <div className="relative h-48">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover"
                     />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-50" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
-                  <div className="absolute top-2 right-2 flex gap-2">
-                    <span className="bg-black/50 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm">
-                      {post.stats.views.toLocaleString()} views
-                    </span>
                   </div>
-                </div>
+                )}
                 <div className="p-5">
-                  <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-lg">
+                  <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2">
                     {post.title}
                   </h3>
                   {post.description && (
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">{post.description}</p>
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-4">{post.description}</p>
                   )}
-                  <div className="flex items-center gap-4 mt-4 pt-4 border-t">
-                    <span className="flex items-center gap-1 text-sm text-gray-500">
-                      <HeartIcon className="w-4 h-4" />
-                      {post.stats.reactions}
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <EyeIcon className="w-4 h-4" />
+                      {post.viewCount.toLocaleString()}
                     </span>
-                    <span className="flex items-center gap-1 text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <HeartIcon className="w-4 h-4" />
+                      {post.reactionCount.toLocaleString()}
+                    </span>
+                    <span className="flex items-center gap-1">
                       <ChatBubbleLeftIcon className="w-4 h-4" />
-                      {post.stats.comments}
+                      {post.commentCount.toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -308,7 +250,7 @@ export default async function AuthorPage({
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-8">All Articles</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {posts.map((post: Post) => (
+            {posts.map((post) => (
               <Link 
                 key={post.id}
                 href={`/article/${post.slug}`}
@@ -321,7 +263,7 @@ export default async function AuthorPage({
                   <p className="text-sm text-gray-600 line-clamp-2 mb-4">{post.description}</p>
                 )}
                 <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t">
-                  <span>{new Date(post.createdAt!).toLocaleDateString('en-US', {
+                  <span>{new Date(post.createdAt).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
@@ -329,11 +271,11 @@ export default async function AuthorPage({
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
                       <EyeIcon className="w-4 h-4" />
-                      {post.stats.views.toLocaleString()}
+                      {post.viewCount.toLocaleString()}
                     </span>
                     <span className="flex items-center gap-1">
                       <HeartIcon className="w-4 h-4" />
-                      {post.stats.reactions.toLocaleString()}
+                      {post.reactionCount.toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -343,7 +285,7 @@ export default async function AuthorPage({
         </div>
       </div>
 
-      {/* Add Schema.org structured data */}
+      {/* Enhanced Schema.org structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -352,21 +294,21 @@ export default async function AuthorPage({
             "@type": "ProfilePage",
             mainEntity: {
               "@type": "Person",
+              "@id": `${baseUrl}/authors/${author.id}`,
               name: author.name,
               image: author.image,
               jobTitle: author.isMonetized ? "Monetized Creator" : "Content Creator",
               worksFor: {
                 "@type": "Organization",
-                name: "Independent Journalism Platform"
-              },
-              url: `https://yourplatform.com/authors/${author.id}`,
-              description: `Content creator with ${stats.totalPosts} articles and ${stats.totalViews.toLocaleString()} total views.`,
-              memberOf: {
-                "@type": "Organization",
                 name: "Independent Journalism Platform",
-                url: "https://yourplatform.com"
+                url: baseUrl
               },
-              knowsAbout: posts.flatMap((post:Post) => post.categories.map(cat => cat.name)),
+              url: `${baseUrl}/authors/${author.id}`,
+              description: `Content creator with ${stats.totalPosts} articles and ${stats.totalViews.toLocaleString()} total views.`,
+              sameAs: [
+                `${baseUrl}/authors/${author.id}`,
+                // Add social media links if available
+              ],
               interactionStatistic: [
                 {
                   "@type": "InteractionCounter",
@@ -375,15 +317,20 @@ export default async function AuthorPage({
                 },
                 {
                   "@type": "InteractionCounter",
-                  interactionType: "https://schema.org/LikeAction",
-                  userInteractionCount: stats.totalReactions
+                  interactionType: "https://schema.org/CommentAction",
+                  userInteractionCount: stats.totalComments
                 },
                 {
                   "@type": "InteractionCounter",
-                  interactionType: "https://schema.org/CommentAction",
-                  userInteractionCount: stats.totalComments
+                  interactionType: "https://schema.org/LikeAction",
+                  userInteractionCount: stats.totalReactions
                 }
-              ]
+              ],
+              knowsAbout: posts.map(post => post.categories).flat().map(cat => cat.name),
+              mainEntityOfPage: {
+                "@type": "WebPage",
+                "@id": `${baseUrl}/authors/${author.id}`
+              }
             },
             breadcrumb: {
               "@type": "BreadcrumbList",
@@ -392,19 +339,19 @@ export default async function AuthorPage({
                   "@type": "ListItem",
                   position: 1,
                   name: "Home",
-                  item: "https://yourplatform.com"
+                  item: baseUrl
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
                   name: "Authors",
-                  item: "https://yourplatform.com/authors"
+                  item: `${baseUrl}/authors`
                 },
                 {
                   "@type": "ListItem",
                   position: 3,
                   name: author.name,
-                  item: `https://yourplatform.com/authors/${author.id}`
+                  item: `${baseUrl}/authors/${author.id}`
                 }
               ]
             }
@@ -413,4 +360,4 @@ export default async function AuthorPage({
       />
     </div>
   )
-} 
+}

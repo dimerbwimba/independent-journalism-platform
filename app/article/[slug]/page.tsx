@@ -97,7 +97,7 @@ export async function generateMetadata({
       article.description ||
       `Read ${article.title} by ${authorName}. Discover quality content about ${categories} on Independent Journalism Platform.`,
     keywords: [
-      ...(article.categories?.map((c) => c.name.toLowerCase()) || []),
+      ...(article.categories?.map((c) => c?.name?.toLowerCase()) || []),
       "independent journalism",
       "expert insights",
       authorName.toLowerCase(),
