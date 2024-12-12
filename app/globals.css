@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: var(--font-inter);
+  }
+
+  body {
+    @apply bg-gray-50;
+  }
+}
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+.scrollbar::-webkit-scrollbar {
+  width: 0.5em;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+/* Markdown Editor Styles */
+.w-md-editor {
+  --md-editor-bg-color: #ffffff !important;
+  --md-editor-border-color: #e5e7eb !important;
+}
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  font-size: 14px !important;
+
+}
+
+.w-md-editor-toolbar {
+  border-bottom: 1px solid var(--md-editor-border-color) !important;
+}
+
+.wmde-markdown {
+  background: none !important;
+}
+
+/* Dark mode support */
+[data-color-mode="dark"] .w-md-editor {
+  --md-editor-bg-color: #1f2937 !important;
+  --md-editor-border-color: #374151 !important;
+}
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+.animate-blob {
+  animation: blob 7s infinite;
+}
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}

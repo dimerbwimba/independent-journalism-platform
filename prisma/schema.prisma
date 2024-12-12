@@ -1,0 +1,334 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  name                String?
+  email               String?              @unique
+  emailVerified       DateTime?
+  image               String?
+  password            String?
+  role                String?              @default("user")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  status              String               @default("ACTIVE") // ACTIVE, SUSPENDED, BANNED
+  violations          Violation[]
+  accounts            Account[]
+  sessions            Session[]
+  comments            Comment[]
+  posts               Post[]
+  videos              Video[]
+  commentVotes        CommentVote[]
+  postReactions       PostReaction[]
+  postViews           PostView[]
+  monetizationProfile MonetizationProfile? @relation("UserMonetizationProfile")
+  contacts            Contact[]
+  reports             Report[]
+  messages            Message[]
+
+  ContactResponse ContactResponse[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  userId    String        @db.ObjectId
+  postId    String        @db.ObjectId
+  parentId  String?       @db.ObjectId
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent    Comment?      @relation("Replies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[]     @relation("Replies")
+  votes     CommentVote[]
+}
+
+model Category {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  name        String              @unique
+  slug        String              @unique
+  description String?
+  image       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  posts       CategoriesOnPosts[]
+}
+
+model Post {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String              @unique
+  seoTitle    String?
+  description String?
+  content     String
+  image       String?
+  published   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  authorId    String              @db.ObjectId
+  author      User                @relation(fields: [authorId], references: [id])
+  categories  CategoriesOnPosts[]
+  videos      Video[]
+  comments    Comment[]
+  reactions   PostReaction[]
+  shares      PostShare[]
+  views       PostView[]
+  reports     Report[]
+}
+
+model Video {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  seoTitle    String?
+  description String?
+  videoUrl    String
+  thumbnail   String?
+  duration    String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  authorId    String   @db.ObjectId
+  author      User     @relation(fields: [authorId], references: [id])
+  relatedPost Post     @relation(fields: [postId], references: [id])
+  postId      String   @db.ObjectId
+}
+
+// Explicit many-to-many relationship model
+model CategoriesOnPosts {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     String   @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.ObjectId
+  assignedAt DateTime @default(now())
+
+  @@unique([postId, categoryId])
+}
+
+model CommentVote {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // "up" or "down"
+  userId    String   @db.ObjectId
+  commentId String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+}
+
+model PostReaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // "heart", "mindblown", "unicorn", "handsdown"
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId, type])
+}
+
+model PostShare {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // "facebook", "twitter", etc.
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, type])
+}
+
+model PostView {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  userId    String?  @db.ObjectId
+  sessionId String // For tracking unique sessions
+  ipHash    String // Hashed IP address for privacy
+  country   String?
+  city      String?
+  device    String?
+  browser   String?
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+  @@index([sessionId, postId]) // For checking duplicate views
+}
+
+// Add to your existing schema
+enum MonetizationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NOT_ELIGIBLE
+}
+
+model MonetizationProfile {
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String             @unique @db.ObjectId
+  status         MonetizationStatus @default(NOT_ELIGIBLE)
+  paypalEmail    String?
+  fullName       String?
+  dateOfBirth    DateTime?
+  whatsappNumber String?
+  location       String?
+  country        String?
+  totalEarnings  Float              @default(0)
+  pendingPayout  Float              @default(0)
+  lastPayout     DateTime?
+  appliedAt      DateTime?
+  approvedAt     DateTime?
+  rejectedAt     DateTime?
+  user           User               @relation(fields: [userId], references: [id], name: "UserMonetizationProfile")
+  payouts        Payout[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model Payout {
+  id            String              @id @default(auto()) @map("_id") @db.ObjectId
+  amount        Float
+  status        String              @default("pending") // pending, completed, failed
+  profileId     String              @db.ObjectId
+  profile       MonetizationProfile @relation(fields: [profileId], references: [id])
+  processedAt   DateTime?
+  failureReason String?
+  createdAt     DateTime            @default(now())
+}
+
+enum ContactStatus {
+  PENDING
+  RESOLVED
+  SPAM
+}
+
+enum ContactType {
+  CONTACT
+  REPORT
+  NEWSLETTER
+}
+
+model Contact {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        @db.ObjectId
+  type        String        @default("CONTACT")
+  status      String        @default("PENDING")  // PENDING, RESOLVED, SPAM
+  subject     String
+  message     String
+  createdAt   DateTime      @default(now())
+  resolvedAt  DateTime?
+  user        User          @relation(fields: [userId], references: [id])
+  responses ContactResponse[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+}
+
+model Report {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String   @db.ObjectId
+  userId      String   @db.ObjectId
+  reason      String
+  details     String?
+  status      String   @default("PENDING")  // PENDING, REVIEWED, DISMISSED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([userId])
+  @@index([status])
+}
+
+model NewsletterSubscriber {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  name      String?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([email, active])
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  title     String
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+}
+
+model Violation {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String    @db.ObjectId
+  type        String // CONTENT, BEHAVIOR, SPAM, OTHER
+  severity    String // LOW, MEDIUM, HIGH
+  description String
+  status      String    @default("PENDING") // PENDING, RESOLVED, APPEALED
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ContactResponse {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  body      String
+  contactId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  
+  // Relations
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([contactId])
+  @@index([userId])
+}
