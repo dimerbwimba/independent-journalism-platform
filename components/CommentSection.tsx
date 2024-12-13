@@ -46,7 +46,6 @@ export default function CommentSection({ postId, currentUser }: CommentSectionPr
   const [error, setError] = useState<string | null>(null)
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
   const [isLoadingComments, setIsLoadingComments] = useState(true)
-  const [_, setIsDeletingId] = useState<string | null>(null)
   const [lastCommentTime, setLastCommentTime] = useState<number>(0)
   const COOLDOWN_PERIOD = 60000 // 60 seconds in milliseconds
   const MAX_COMMENT_LENGTH = 200
