@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma";
 import { 
   anonymizeIp, 
@@ -12,8 +12,9 @@ const DUPLICATE_VIEW_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions);
     const { sessionId, ip, userAgent } = await req.json();
@@ -21,7 +22,7 @@ export async function POST(
     // Check for duplicate view
     const recentView = await prisma.postView.findFirst({
       where: {
-        postId: params.id,
+        postId: id,
         sessionId,
         createdAt: {
           gte: new Date(Date.now() - DUPLICATE_VIEW_TIMEOUT)
@@ -45,7 +46,7 @@ export async function POST(
     // Create view record
    await prisma.postView.create({
       data: {
-        postId: params.id,
+        postId: id,
         userId: session?.user?.id,
         sessionId,
         ipHash: anonymizeIp(ip),
@@ -58,7 +59,7 @@ export async function POST(
 
     // Get updated view count
     const viewCount = await prisma.postView.count({
-      where: { postId: params.id }
+      where: { postId: id }
     });
 
     return NextResponse.json({ 
@@ -76,11 +77,12 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const viewCount = await prisma.postView.count({
-      where: { postId: params.id }
+        where: { postId: id }
     });
 
     return NextResponse.json({ viewCount });

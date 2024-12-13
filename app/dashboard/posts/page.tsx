@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import Link from "next/link"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import PostsList from "@/components/dashboard/PostsList"

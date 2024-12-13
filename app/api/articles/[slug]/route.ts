@@ -1,18 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-interface RouteContext {
-  params: { slug: string }
-}
-
 export async function GET(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: Promise<{ slug: string }> }
 ) {
+  const { slug } = await params
   try {
     const post = await prisma.post.findFirst({
       where: {
-        slug: context.params.slug,
+        slug: slug,
         published: true,
       },
       include: {

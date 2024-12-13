@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || session?.user?.role !== 'admin') {
@@ -27,7 +28,7 @@ export async function POST(
       prisma.contactResponse.create({
         data: {
           body: response,
-          contactId: params.id,
+          contactId: id,
           userId: session.user.id,
         },
         include: {
@@ -66,8 +67,9 @@ export async function POST(
 // Add GET method to fetch responses for a contact
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }>  }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (session?.user?.role !== 'admin') {
@@ -75,7 +77,7 @@ export async function GET(
     }
 
     const responses = await prisma.contactResponse.findMany({
-      where: { contactId: params.id },
+      where: { contactId: id },
       include: {
         user: {
           select: {

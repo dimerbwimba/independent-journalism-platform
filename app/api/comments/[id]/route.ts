@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
 
@@ -18,7 +19,7 @@ export async function DELETE(
     }
 
     const comment = await prisma.comment.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: { user: true }
     })
 
@@ -41,8 +42,8 @@ export async function DELETE(
     await prisma.comment.deleteMany({
       where: {
         OR: [
-          { id: params.id },
-          { parentId: params.id }
+          { id: id },
+          { parentId: id }
         ]
       }
     })

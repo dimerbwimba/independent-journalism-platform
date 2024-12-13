@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (session?.user?.role !== 'admin') {
@@ -15,7 +16,7 @@ export async function GET(
 
     // Try to find contact
     const contact = await prisma.contact.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         user: {
           select: {
@@ -38,7 +39,7 @@ export async function GET(
 
     // If not found, try to find report
     const report = await prisma.report.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         user: {
           select: {
@@ -78,8 +79,9 @@ export async function GET(
 // Update status
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const {id} = await params
   try {
     const session = await getServerSession(authOptions)
     if (session?.user?.role !== 'admin') {
@@ -90,7 +92,7 @@ export async function PATCH(
 
     if (type === 'CONTACT') {
       const contact = await prisma.contact.update({
-        where: { id: params.id },
+        where: { id: id },
         data: { status }
       })
       return NextResponse.json({ success: true, data: contact })
@@ -98,7 +100,7 @@ export async function PATCH(
 
     if (type === 'REPORT') {
       const report = await prisma.report.update({
-        where: { id: params.id },
+        where: { id: id },
         data: { status }
       })
       return NextResponse.json({ success: true, data: report })

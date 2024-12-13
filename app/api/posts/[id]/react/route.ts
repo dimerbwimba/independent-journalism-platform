@@ -1,14 +1,15 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 const VALID_REACTIONS = ['heart', 'mindblown', 'unicorn', 'handsdown']
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const {id}= await params
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
@@ -30,7 +31,7 @@ export async function POST(
       where: {
         userId_postId_type: {
           userId: session.user.id,
-          postId: params.id,
+          postId: id,
           type,
         },
       },
@@ -45,14 +46,14 @@ export async function POST(
         data: {
           type,
           userId: session.user.id,
-          postId: params.id,
+          postId: id,
         },
       })
     }
 
     const reactions = await prisma.postReaction.groupBy({
       by: ['type'],
-      where: { postId: params.id },
+      where: { postId: id },
       _count: true,
     })
 

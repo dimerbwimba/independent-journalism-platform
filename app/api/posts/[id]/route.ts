@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
 
@@ -21,7 +22,7 @@ export async function PUT(
 
     const post = await prisma.post.update({
       where: {
-        id: params.id,
+        id: id,
         authorId: session.user.id,
       },
       data: {
@@ -65,8 +66,9 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }>  }
 ) {
+  const { id } = await params
   try {
     const session = await getServerSession(authOptions)
 
@@ -80,7 +82,7 @@ export async function DELETE(
     // Get the post first
     const post = await prisma.post.findUnique({
       where: {
-        id: params.id,
+        id: id,
         authorId: session.user.id,
       },
     })
@@ -96,12 +98,12 @@ export async function DELETE(
     await prisma.$transaction([
       // Delete category relationships
       prisma.categoriesOnPosts.deleteMany({
-        where: { postId: params.id }
+        where: { postId: id }
       }),
       // Delete the post
       prisma.post.delete({
         where: {
-          id: params.id,
+          id: id,
           authorId: session.user.id,
         }
       })

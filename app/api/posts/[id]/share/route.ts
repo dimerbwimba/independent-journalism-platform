@@ -5,8 +5,9 @@ const VALID_SHARE_TYPES = ['facebook', 'twitter', 'linkedin', 'whatsapp']
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const { type } = await req.json()
     
@@ -20,14 +21,14 @@ export async function POST(
     await prisma.postShare.create({
       data: {
         type,
-        postId: params.id,
+        postId: id,
       },
     })
 
     // Get updated share counts
     const shares = await prisma.postShare.groupBy({
       by: ['type'],
-      where: { postId: params.id },
+      where: { postId: id },
       _count: true,
     })
 

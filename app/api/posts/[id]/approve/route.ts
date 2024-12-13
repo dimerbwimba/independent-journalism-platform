@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+const {id}= await params
   try {
     const session = await getServerSession(authOptions)
 
@@ -21,7 +22,7 @@ export async function PUT(
 
     const post = await prisma.post.update({
       where: {
-        id: params.id,
+        id: id,
       },
       data: {
         published: approved,

@@ -1,15 +1,16 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params       
   try {
     const session = await getServerSession(authOptions)
-    const commentId = await params.id
+    const commentId = await id
 
     if (!session) {
       return NextResponse.json(

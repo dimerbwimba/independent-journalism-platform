@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/api/auth/options"
 import { redirect } from "next/navigation"
 import Breadcrumb from "@/components/dashboard/Breadcrumb"
 import CategoryList from "@/components/dashboard/CategoryList"

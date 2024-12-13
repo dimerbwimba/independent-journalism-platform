@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { marked } from "marked";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options"
 import CommentSection from "@/components/CommentSection";
 import PostReactions from "@/components/PostReactions";
 import ViewCounter from "@/components/ViewCounter";
@@ -76,9 +76,10 @@ async function getArticle(slug: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const article = await getArticle(params.slug);
+  const { slug } = await params
+  const article = await getArticle(slug);
 
   if (!article) {
     return {
@@ -140,10 +141,11 @@ export async function generateMetadata({
 export default async function ArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>
 }) {
+  const {slug} = await params
   const session = await getServerSession(authOptions);
-  const post = await getArticle(params.slug);
+  const post = await getArticle(slug);
 
   if (!post) {
     notFound();
