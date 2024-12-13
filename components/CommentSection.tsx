@@ -160,7 +160,7 @@ export default function CommentSection({ postId, currentUser }: CommentSectionPr
       setNewComment('')
       setReplyTo(null)
       setIsReplyModalOpen(false)
-    } catch (err) {
+    } catch {
       setError('Failed to post comment')
     } finally {
       setIsLoading(false)
