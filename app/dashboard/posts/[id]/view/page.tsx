@@ -7,9 +7,10 @@ import PreviewPost from "@/components/dashboard/PreviewPost"
 import Breadcrumb from "@/components/dashboard/Breadcrumb"
 import Link from "next/link"
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const {id} = await params
   const post = await prisma.post.findUnique({
-    where: { id: params.id }
+    where: { id: id }
   })
 
   return {
