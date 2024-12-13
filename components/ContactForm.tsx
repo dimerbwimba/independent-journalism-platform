@@ -14,7 +14,6 @@ const SUBJECT_OPTIONS = [
 ];
 
 const MAX_MESSAGE_LENGTH = 200;
-const MAX_SUBJECT_LENGTH = 40;
 
 export default function ContactForm() {
   const { data: session } = useSession();
@@ -70,7 +69,7 @@ export default function ContactForm() {
           <div className="ml-3">
             <h3 className="text-sm font-medium text-green-800">Message sent successfully</h3>
             <p className="mt-2 text-sm text-green-700">
-              Thank you for contacting us. We'll get back to you soon.
+              Thank you for contacting us. We&apos;ll get back to you soon.
             </p>
             <button
               onClick={() => setSuccess(false)}

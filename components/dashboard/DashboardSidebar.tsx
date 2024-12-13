@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { 
   HomeIcon, 
-  VideoCameraIcon,
   PencilIcon,
   UserIcon,
   ChevronUpIcon,
@@ -17,8 +16,6 @@ import {
   ChartBarIcon,
   ClockIcon,
   BanknotesIcon,
-  ShieldExclamationIcon,
-  UsersIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'

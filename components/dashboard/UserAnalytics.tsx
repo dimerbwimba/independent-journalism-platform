@@ -6,7 +6,6 @@ import {
   EyeIcon,
   ChatBubbleLeftIcon,
   HeartIcon,
-  ShareIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline'
 import {
@@ -23,7 +22,6 @@ import {
   Scale
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import Link from 'next/link'
 
 // Register ChartJS components
 ChartJS.register(
@@ -37,14 +35,7 @@ ChartJS.register(
   Filler
 )
 
-interface TopPost {
-  title: string
-  slug: string
-  views: number
-  comments: number
-  reactions: number
-  shares: number
-}
+
 
 interface CategoryEngagement {
   category: {
@@ -371,7 +362,7 @@ export default function UserAnalytics() {
             </div>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg">
-            <div className="text-sm text-purple-600 font-medium">Today's Views</div>
+            <div className="text-sm text-purple-600 font-medium">Today&apos;s Views</div>
             <div className="text-2xl font-semibold text-purple-700">
               {(data.viewsTrend[data.viewsTrend.length - 1]?.count || 0).toLocaleString()}
             </div>

@@ -6,9 +6,6 @@ import {
   CheckCircleIcon,
   ClockIcon,
   DocumentTextIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  ExclamationTriangleIcon
 } from "@heroicons/react/24/outline"
 
 export const metadata: Metadata = {
@@ -164,7 +161,7 @@ export default function MonetizationPage() {
                     <h3 className="text-lg font-semibold text-gray-900">Payment Schedule</h3>
                     <p className="text-gray-600">
                       Payments are processed monthly for earnings above $50. Payments are made 
-                      via PayPal between the 1st and 5th of each month for the previous month's earnings.
+                      via PayPal between the 1st and 5th of each month for the previous month&apos;s earnings.
                     </p>
                   </div>
                 </div>

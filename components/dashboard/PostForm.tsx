@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import PreviewPost from "./PreviewPost";
 import MDEditor from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
@@ -102,17 +101,6 @@ export default function PostForm({ post }: PostFormProps) {
     }
   }
 
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value.trim();
-    setFormData((prev) => ({ ...prev, image: url }));
-
-    if (url) {
-      validateImageUrl(url);
-    } else {
-      setError(null);
-      setIsImageValid(true);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -147,7 +135,7 @@ export default function PostForm({ post }: PostFormProps) {
         const data = await response.json();
         setError(data.error || "Something went wrong");
       }
-    } catch (err) {
+    } catch{
       setError("Failed to save post");
     } finally {
       setIsLoading(false);

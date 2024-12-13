@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { UserAvatar } from "@/components/UserAvatar"
 import { 
-  TrophyIcon,
   BanknotesIcon,
   EyeIcon,
   HeartIcon,
@@ -143,9 +141,9 @@ export default async function AuthorPage({ params }: { params: { id: string } })
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="">
         {/* Author Profile */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="max-w-[1400px] mx-auto lg:px-80 md:px-20 px-10  shadow-sm p-8">
           <div className="flex items-start gap-8">
             {author.image && (
               <Image
@@ -200,9 +198,9 @@ export default async function AuthorPage({ params }: { params: { id: string } })
         </div>
 
         {/* Featured Posts */}
-        <div>
+        <div className="max-w-[1400px] mx-auto lg:px-80 md:px-20 px-10 py-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Articles</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {featuredPosts.map((post) => (
               <Link 
                 key={post.id}
@@ -247,9 +245,9 @@ export default async function AuthorPage({ params }: { params: { id: string } })
         </div>
 
         {/* All Posts */}
-        <div>
+        <div className="max-w-[1400px] mx-auto lg:px-80 md:px-20 px-10 py-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">All Articles</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {posts.map((post) => (
               <Link 
                 key={post.id}

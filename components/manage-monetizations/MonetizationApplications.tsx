@@ -6,7 +6,6 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
-  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 import { MonetizationStatus } from '@prisma/client'
 

@@ -111,8 +111,8 @@ export default function ReportArticleModal({ isOpen, onClose, postId }: ReportAr
                 setSelectedReason('')
                 setDetails('')
             }, 2000)
-        } catch (err) {
-            setError('Failed to submit report. Please try again later.')
+        } catch (error:any) {
+            setError('Failed to submit report. Please try again later or contact support. '+error.message)
         } finally {
             setIsSubmitting(false)
         }

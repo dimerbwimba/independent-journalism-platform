@@ -35,7 +35,7 @@ interface Props {
 
 export default function MonetizationDashboard({ profile, totalViews }: Props) {
   const [isApplying, setIsApplying] = useState(false)
-  const [showReapplyModal, setShowReapplyModal] = useState(false)
+  const [_, setShowReapplyModal] = useState(false)
   const [formData, setFormData] = useState({
     paypalEmail: '',
     fullName: '',
@@ -76,8 +76,8 @@ export default function MonetizationDashboard({ profile, totalViews }: Props) {
       if (!response.ok) throw new Error('Failed to apply')
 
       window.location.reload()
-    } catch (err) {
-      setError('Failed to submit application')
+    } catch (error:any) {
+      setError('Failed to submit application or contact support. '+error.message)
     } finally {
       setIsApplying(false)
     }
@@ -270,7 +270,7 @@ export default function MonetizationDashboard({ profile, totalViews }: Props) {
               <div className="border-b border-gray-200 pb-4">
                 <h4 className="text-lg font-semibold text-gray-900">Contact Information</h4>
                 <p className="text-sm text-gray-600">
-                  We'll use this to communicate about your earnings and any important updates.
+                  We&apos;ll use this to communicate about your earnings and any important updates.
                 </p>
               </div>
               
@@ -525,7 +525,7 @@ export default function MonetizationDashboard({ profile, totalViews }: Props) {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm text-gray-700">
-                    You'll receive an email notification once a decision is made
+                    You&apos;ll receive an email notification once a decision is made
                   </p>
                 </div>
               </div>

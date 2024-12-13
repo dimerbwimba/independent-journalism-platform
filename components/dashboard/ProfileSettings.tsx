@@ -52,7 +52,7 @@ function ProfileSettings() {
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to update profile' })
       }
-    } catch (error) {
+    } catch  {
       setMessage({ type: 'error', text: 'An error occurred. Please try again.' })
     } finally {
       setIsLoading(false)

@@ -10,6 +10,7 @@ import {
   EyeIcon,
   PhotoIcon
 } from '@heroicons/react/24/outline'
+import { useSession } from 'next-auth/react'
 
 interface Category {
   id: string
@@ -28,6 +29,7 @@ interface Post {
 }
 
 export default function PostsList() {
+  const session = useSession()
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -181,20 +183,23 @@ export default function PostsList() {
                 <EyeIcon className="h-4 w-4 mr-1" />
                 View
               </Link>
+              {session?.data?.user?.role === 'admin' &&<>
               <Link
                 href={`/dashboard/posts/${post.id}/edit`}
                 className="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
                 <PencilIcon className="h-4 w-4 mr-1" />
                 Edit
-              </Link>
-              <button
+              </Link> 
+               <button
                 onClick={() => handleDelete(post.id)}
                 className="inline-flex items-center rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
                 Delete
               </button>
+              </>
+              }
             </div>
           </div>
         </div>

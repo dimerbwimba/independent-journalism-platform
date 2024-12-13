@@ -295,8 +295,8 @@ export default async function HomePage() {
 
                   <div className="p-4 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-lg backdrop-blur-sm border border-blue-400/10">
                     <p className="text-sm text-blue-100">
-                      "I've been able to share my knowledge and earn
-                      consistently. The platform's support has been incredible!"
+                    &quot;I&apos;ve been able to share my knowledge and earn
+                      consistently. The platform&apos;s support has been incredible!&quot;
                     </p>
                     <div className="mt-4 flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-blue-500/20" />
@@ -421,7 +421,7 @@ export default async function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Popular This Week</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover the most engaging content that's making waves this week
+              Discover the most engaging content that&apos;s making waves this week
             </p>
           </div>
 
@@ -601,7 +601,7 @@ export default async function HomePage() {
             <h2 className="text-3xl font-bold mb-4">Explore Categories</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Dive deep into your favorite topics. From cutting-edge technology
-              to business strategies, we've got you covered with expert insights
+              to business strategies, we&apos;ve got you covered with expert insights
               and analysis.
             </p>
           </div>

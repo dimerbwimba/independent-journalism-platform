@@ -19,20 +19,6 @@ interface CommunicationStats {
   unreadMessages: number
 }
 
-interface Message {
-  id: string
-  type: 'CONTACT' | 'REPORT' | 'NEWSLETTER'
-  status: 'PENDING' | 'RESOLVED' | 'SPAM'
-  subject: string
-  message: string
-  createdAt: string
-  user: {
-    name: string
-    email: string
-    image?: string
-  }
-}
-
 export default function CommunicationPage() {
   const { data: session, status } = useSession()
   const [stats, setStats] = useState<CommunicationStats | null>(null)

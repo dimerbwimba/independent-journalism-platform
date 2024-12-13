@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { 
   ChatBubbleLeftRightIcon, 
@@ -29,7 +28,6 @@ interface Contact {
 }
 
 export default function InquiriesPage() {
-  // const { data: session } = useSession()
   const [inquiries, setInquiries] = useState<Contact[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

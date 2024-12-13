@@ -99,8 +99,8 @@ export default function CreateCategoryButton() {
         const data = await response.json()
         setError(data.error || 'Something went wrong')
       }
-    } catch (err) {
-      setError('Failed to create category')
+    } catch (error:any) {
+      setError('Failed to create category or contact support. '+error.message)
     } finally {
       setIsLoading(false)
     }

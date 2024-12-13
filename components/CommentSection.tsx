@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import ReplyModal from './ReplyModal'
 import { TrashIcon } from '@heroicons/react/24/outline'
@@ -47,7 +46,7 @@ export default function CommentSection({ postId, currentUser }: CommentSectionPr
   const [error, setError] = useState<string | null>(null)
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
   const [isLoadingComments, setIsLoadingComments] = useState(true)
-  const [isDeletingId, setIsDeletingId] = useState<string | null>(null)
+  const [_, setIsDeletingId] = useState<string | null>(null)
   const [lastCommentTime, setLastCommentTime] = useState<number>(0)
   const COOLDOWN_PERIOD = 60000 // 60 seconds in milliseconds
   const MAX_COMMENT_LENGTH = 200
@@ -168,45 +167,6 @@ export default function CommentSection({ postId, currentUser }: CommentSectionPr
       setIsLoading(false)
     }
     setLastCommentTime(Date.now())
-  }
-
-  const handleDeleteComment = async (commentId: string) => {
-    if (!window.confirm('Are you sure you want to delete this comment? All replies will also be deleted.')) {
-      return
-    }
-
-    setIsDeletingId(commentId)
-    try {
-      const response = await fetch(`/api/comments/${commentId}`, {
-        method: 'DELETE'
-      })
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Failed to delete comment')
-      }
-
-      setComments(prevComments => {
-        return prevComments.map(comment => {
-          if (comment.id === commentId) {
-            return null
-          }
-          if (comment.replies?.length > 0) {
-            return {
-              ...comment,
-              replies: comment.replies.filter(reply => reply.id !== commentId)
-            }
-          }
-          return comment
-        }).filter(Boolean) as Comment[]
-      })
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete comment')
-      console.error(err)
-    } finally {
-      setIsDeletingId(null)
-    }
   }
 
   const CommentSkeleton = () => (

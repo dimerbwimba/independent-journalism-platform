@@ -77,8 +77,8 @@ export default function SignInForm({ isRegister = false }: SignInFormProps) {
 
         router.push('/dashboard')
       }
-    } catch (error) {
-      setError('An error occurred. Please try again.')
+    } catch (error:any ) {
+      setError('An error occurred. Please try again or contact support. '+error.message)
     } finally {
       setIsLoading(false)
     }
@@ -161,11 +161,8 @@ export default function SignInForm({ isRegister = false }: SignInFormProps) {
             </Link>
           </p>
         ) : (
-          <p>
-            Don't have an account?{' '}
-            <Link href="/auth/register" className="text-blue-600 hover:text-blue-500">
-              Sign up
-            </Link>
+          <p className="text-sm text-gray-500">
+            Don&apos;t have an account?
           </p>
         )}
       </div>

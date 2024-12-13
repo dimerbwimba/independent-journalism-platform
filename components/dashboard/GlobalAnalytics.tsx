@@ -452,7 +452,7 @@ export default function GlobalAnalytics() {
             </div>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg">
-            <div className="text-sm text-purple-600 font-medium">Today's Views</div>
+            <div className="text-sm text-purple-600 font-medium">Today&apos;s Views</div>
             <div className="text-2xl font-semibold text-purple-700">
               {(data.recentViews[data.recentViews.length - 1]?.count || 0).toLocaleString()}
             </div>

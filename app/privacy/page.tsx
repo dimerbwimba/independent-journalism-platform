@@ -1,15 +1,11 @@
 import { Metadata } from "next"
-import Link from "next/link"
 import { 
   ShieldCheckIcon, 
-  LockClosedIcon,
   DocumentTextIcon,
-  UserGroupIcon,
   GlobeAltIcon,
   ServerIcon,
   KeyIcon,
   ArrowPathIcon,
-  ExclamationTriangleIcon,
   EnvelopeIcon
 } from "@heroicons/react/24/outline"
 
