@@ -85,7 +85,7 @@ export default function ShareButton({
         <div className="absolute lg:-bottom-24 bottom-full lg:left-16 mb-2 space-y-3 px-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
           <FacebookShareButton
             url={url}
-            quote={title}
+           title={title}
             className="flex items-center w-full px-4 py-2 hover:bg-gray-50 transition-colors"
             onClick={() => handleShare("facebook")}
           >

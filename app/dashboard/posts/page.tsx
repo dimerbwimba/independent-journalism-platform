@@ -1,12 +1,10 @@
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/options"
+
 import Link from "next/link"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import PostsList from "@/components/dashboard/PostsList"
 import Breadcrumb from "@/components/dashboard/Breadcrumb"
 
 export default async function PostsPage() {
-  const session = await getServerSession(authOptions)
 
   return (
     <div className="space-y-6 p-8">
@@ -29,7 +27,7 @@ export default async function PostsPage() {
         </div>
       </div>
 
-      <PostsList userId={session?.user?.id || ''} />
+      <PostsList  />
     </div>
   )
 } 

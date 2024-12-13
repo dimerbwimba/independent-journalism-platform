@@ -4,18 +4,17 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 
-// Predefined subject options
-const SUBJECT_OPTIONS = [
-  { id: 'technical', label: 'Technical Support' },
-  { id: 'account', label: 'Account Issues' },
-  { id: 'content', label: 'Content Related' },
-  { id: 'billing', label: 'Billing Questions' },
-  { id: 'feedback', label: 'General Feedback' },
-];
+interface ContactFormProps {
+  inquiryTypes: {
+    id: string;
+    label: string;
+    description: string;
+  }[];
+}
 
 const MAX_MESSAGE_LENGTH = 200;
 
-export default function ContactForm() {
+export default function ContactForm({ inquiryTypes }: ContactFormProps) {
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -140,7 +139,7 @@ export default function ContactForm() {
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         >
           <option value="">Select a subject</option>
-          {SUBJECT_OPTIONS.map((option) => (
+          {inquiryTypes.map((option) => (
             <option key={option.id} value={option.id}>
               {option.label}
             </option>
