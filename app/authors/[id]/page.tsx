@@ -72,8 +72,9 @@ async function getAuthorData(id: string): Promise<AuthorData | null> {
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const data = await getAuthorData(params.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const {id} = await params
+  const data = await getAuthorData(id)
   if (!data) return { title: 'Author Not Found' }
 
   const { author, stats } = data
@@ -131,8 +132,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 }
 
-export default async function AuthorPage({ params }: { params: { id: string } }) {
-  const data = await getAuthorData(params.id)
+export default async function AuthorPage({ params }: { params:Promise<{ id: string }> }) {
+  const {id} = await params
+  const data = await getAuthorData(id)
   if (!data) notFound()
 
   const { author, stats, posts } = data

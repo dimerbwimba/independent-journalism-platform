@@ -48,8 +48,9 @@ async function getCategory(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const category = await getCategory(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const category = await getCategory(slug);
   
   if (!category) {
     return {
@@ -102,9 +103,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CategoryPage({
   params
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const category = await getCategory(params.slug)
+  const {slug} = await params
+  const category = await getCategory(slug)
 
   if (!category) {
     notFound()

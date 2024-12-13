@@ -21,14 +21,15 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function ViewPostPage({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const {id} = await params
   const session = await getServerSession(authOptions)
   if (!session) redirect('/auth/signin')
 
   const post = await prisma.post.findUnique({
     where: { 
-      id: params.id,
+      id: id,
       authorId: session.user.id
     },
     include: {

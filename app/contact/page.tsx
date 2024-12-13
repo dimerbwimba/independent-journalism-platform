@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/options"
 import ContactForm from "@/components/ContactForm";
 import {
   EnvelopeIcon,
