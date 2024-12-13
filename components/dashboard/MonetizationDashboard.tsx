@@ -35,7 +35,7 @@ interface Props {
 
 export default function MonetizationDashboard({ profile, totalViews }: Props) {
   const [isApplying, setIsApplying] = useState(false)
-  const [_, setShowReapplyModal] = useState(false)
+  // const [_, setShowReapplyModal] = useState(false)
   const [formData, setFormData] = useState({
     paypalEmail: '',
     fullName: '',
@@ -417,7 +417,7 @@ export default function MonetizationDashboard({ profile, totalViews }: Props) {
                       The waiting period has ended. You can now submit a new application for monetization.
                     </p>
                     <button
-                      onClick={() => setShowReapplyModal(true)}
+                      // onClick={() => setShowReapplyModal(true)}
                       className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
                       <CheckCircleIcon className="mr-2 h-4 w-4" />

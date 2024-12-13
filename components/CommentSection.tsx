@@ -253,8 +253,8 @@ export default function CommentSection({ postId, currentUser }: CommentSectionPr
             return prevComments.filter(c => c.id !== comment.id);
           }
         });
-      } catch (err) {
-        console.error(err);
+      } catch  {
+       
         setError('Failed to delete comment');
       } finally {
         setIsDeleting(false);

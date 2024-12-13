@@ -37,79 +37,51 @@ export async function POST(req: Request) {
     // Check if slug exists and generate a unique one if needed
     let slug = baseSlug
     let counter = 1
-    
-    while (true) {
-      const existingPost = await prisma.post.findUnique({
+    let slugExists = true
+
+    // Use a do-while loop instead of while(true)
+    do {
+      const existingPost = await prisma.post.findFirst({
         where: { slug }
       })
       
-      if (!existingPost) break
-      
-      slug = `${baseSlug}-${counter}`
-      counter++
-    }
-
-    try {
-      // Verify that all categories exist
-      const categoryCount = await prisma.category.count({
-        where: {
-          id: {
-            in: categories,
-          },
-        },
-      })
-
-      if (categoryCount !== categories.length) {
-        return NextResponse.json(
-          { error: "One or more categories are invalid" },
-          { status: 400 }
-        )
+      if (!existingPost) {
+        slugExists = false
+      } else {
+        slug = `${baseSlug}-${counter}`
+        counter++
       }
+    } while (slugExists && counter < 3) // Add a reasonable limit
 
-      // Create the post with the slug
-      const post = await prisma.post.create({
-        data: {
-          title,
-          slug,
-          seoTitle,
-          description,
-          content,
-          published: published || false,
-          image: image || null,
-          authorId: session.user.id,
-          categories: {
-            create: categories.map((id: string) => ({
-              category: {
-                connect: { id }
-              },
-              assignedAt: new Date(),
-            })),
-          },
-        },
-        include: {
-          categories: {
-            include: {
-              category: true,
-            },
-          },
-        },
-      })
-
-      return NextResponse.json({
-        success: true,
-        post: {
-          ...post,
-          categories: post.categories.map(pc => pc.category)
-        }
-      })
-
-    } catch (dbError) {
-      console.error("Database error:", dbError)
+    // If we couldn't generate a unique slug after 100 tries, return an error
+    if (slugExists) {
       return NextResponse.json(
-        { error: "Database error occurred" },
-        { status: 500 }
+        { error: "Could not generate unique slug" },
+        { status: 400 }
       )
     }
+
+    const post = await prisma.post.create({
+      data: {
+        title,
+        seoTitle,
+        description,
+        content,
+        slug,
+        published,
+        image,
+        authorId: session.user.id,
+        categories: {
+          create: categories.map((id: string) => ({
+            category: {
+              connect: { id }
+            }
+          }))
+        }
+      }
+    })
+
+    return NextResponse.json({ success: true, post })
   } catch (error) {
     console.error("Post creation error:", error)
     return NextResponse.json(
