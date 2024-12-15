@@ -50,7 +50,9 @@ export const authOptions: NextAuthOptions = {
             id: user.id,
             email: user.email!,
             name: user.name || 'User',
-            role: user.role || 'user'
+            role: user.role || 'user',
+            status:user.status
+            
           }
         } catch (error) {
           console.error('Auth error:', error)
@@ -74,6 +76,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.role = user.role
+        token.status = user.status
       }
       return token
     },
@@ -81,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string | undefined
+        session.user.status = token.status as string
       }
       return session
     }

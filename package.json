@@ -10,9 +10,9 @@
     "lint": "next lint"
   },
   "overrides": {
-  "react": "$react",
-  "react-dom": "$react-dom"
-},
+    "react": "$react",
+    "react-dom": "$react-dom"
+  },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
     "@heroicons/react": "^2.2.0",
@@ -22,6 +22,7 @@
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.7",
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "marked": "^15.0.3",
     "mongodb": "^6.11.0",
     "next": "15.0.3",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "@types/bcryptjs": "^2.4.6",
+    "@types/lodash": "^4.17.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

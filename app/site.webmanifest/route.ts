@@ -5,7 +5,7 @@ export async function GET() {
 
   const manifest = {
     name: "Independent Journalism Platform",
-    short_name: "IndieJournal",
+    short_name: "Journal",
     description: "A platform for independent journalism and quality content creation",
     start_url: "/",
     display: "standalone",
