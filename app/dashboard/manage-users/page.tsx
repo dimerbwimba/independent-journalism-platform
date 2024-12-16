@@ -179,14 +179,14 @@ export default function ManageUsersPage() {
               <p>Tools for maintaining platform safety and guideline compliance.</p>
             </div>
             <div className="mt-5 space-y-2">
-              <a href="/dashboard/manage-users/enforcement" className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <Link href="/dashboard/manage-users/enforcement" className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 <ShieldExclamationIcon className="h-5 w-5 mr-2 text-gray-400" />
                 Review Violations
-              </a>
-              <a href="/dashboard/manage-users/moderation" className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              </Link>
+              <Link href="/dashboard/manage-users/moderation" className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 <DocumentCheckIcon className="h-5 w-5 mr-2 text-gray-400" />
                 Content Moderation
-              </a>
+              </Link>
             </div>
           </div>
         </div>
