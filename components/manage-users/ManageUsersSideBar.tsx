@@ -8,7 +8,6 @@ import {
   ShieldCheckIcon,
   TrashIcon,
   ShieldExclamationIcon,
-  DocumentCheckIcon,
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
 
@@ -30,12 +29,6 @@ const navigation = [
     href: "/dashboard/manage-users/enforcement",
     icon: ShieldExclamationIcon,
     description: "Handle content and behavior violations"
-  },
-  {
-    name: "Content Moderation",
-    href: "/dashboard/manage-users/moderation",
-    icon: DocumentCheckIcon,
-    description: "Review and moderate user content"
   },
   {
     name: "Banned Users",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -16,12 +16,28 @@ import {
   ChartBarIcon,
   ClockIcon,
   BanknotesIcon,
-  ChatBubbleLeftRightIcon
+  ChatBubbleLeftRightIcon,
+  ShieldExclamationIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/utils'
 
+interface NavigationItem {
+  name: string
+  href: string
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  description?: string
+  alert?: {
+    count: number
+    type: 'danger' | 'warning'
+  }
+}
+
+interface ViolationCount {
+  count: number
+}
+
 // Base navigation items for all users
-const baseNavigation = [
+const baseNavigation: NavigationItem[] = [
   { name: 'Creator Analytics', href: '/dashboard', icon: HomeIcon },
   { 
     name: 'Posts',
@@ -42,11 +58,18 @@ const baseNavigation = [
     name: 'Monetization',
     href: '/dashboard/monetization',
     icon: BanknotesIcon,
+  },
+  {
+    name: 'Violations',
+    href: '/dashboard/violations',
+    icon: ShieldExclamationIcon,
+    description: 'View and manage content violations',
+    alert: undefined
   }
 ]
 
 // Admin-only navigation items
-const adminNavigation = [
+const adminNavigation: NavigationItem[] = [
   { 
     name: 'Categories',
     href: '/dashboard/categories',
@@ -73,6 +96,25 @@ export function DashboardSidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [violationCount, setViolationCount] = useState<number>(0)
+
+  useEffect(() => {
+    if (session?.user) {
+      fetchViolationCount()
+    }
+  }, [session])
+
+  const fetchViolationCount = async () => {
+    try {
+      const response = await fetch('/api/violations/user-count')
+      if (response.ok) {
+        const data: ViolationCount = await response.json()
+        setViolationCount(data.count)
+      }
+    } catch (error) {
+      console.error('Failed to fetch violation count:', error)
+    }
+  }
 
   const isAdmin = session?.user?.role === 'admin'
   
@@ -80,6 +122,20 @@ export function DashboardSidebar() {
   const navigation = isAdmin 
     ? [...baseNavigation, ...adminNavigation]
     : baseNavigation
+
+  // Update navigation with violation count
+  const navigationWithCount = navigation.map(item => {
+    if (item.name === 'Violations' && violationCount > 0) {
+      return {
+        ...item,
+        alert: {
+          count: violationCount,
+          type: 'danger' as const
+        }
+      }
+    }
+    return item
+  })
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: '/' })
@@ -94,7 +150,7 @@ export function DashboardSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-3 py-4">
-        {navigation.map((item) => {
+        {navigationWithCount.map((item) => {
           const isActive = pathname.startsWith(item.href)
           
           return (
@@ -107,11 +163,20 @@ export function DashboardSidebar() {
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
                 isActive ? 
                   "bg-gray-100 text-gray-900" : 
-                  "text-gray-700"
+                  "text-gray-700",
+                item.alert?.type === 'danger' && "text-red-600 hover:text-red-700"
               )}
             >
               <item.icon className="h-5 w-5 flex-shrink-0" />
               {item.name}
+              {item.alert && (
+                <span className={cn(
+                  "inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full",
+                  item.alert.type === 'danger' ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-600"
+                )}>
+                  {item.alert.count}
+                </span>
+              )}
             </Link>
           )
         })}

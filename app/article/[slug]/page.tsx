@@ -174,7 +174,7 @@ export default async function ArticlePage({
             {post.description && (
               <p className="mt-4 text-lg text-gray-600">{post.description}</p>
             )}
-            <div className="mt-6 flex items-center justify-start gap-6">
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 items-center justify-start gap-6">
               <div className="flex items-center">
                 {post.author.image ? (
                   <Image
