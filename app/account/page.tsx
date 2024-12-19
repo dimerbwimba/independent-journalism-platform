@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { 
@@ -30,7 +31,7 @@ const providerNames = {
   credentials: 'Password'
 }
 
-export default function AccountPage() {
+function AccountContent() {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(true)
   const [userData, setUserData] = useState<UserData | null>(null)
@@ -260,5 +261,13 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AccountContent />
+    </Suspense>
   )
 } 
