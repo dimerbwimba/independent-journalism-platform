@@ -6,35 +6,37 @@ import prisma from "@/lib/prisma"
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session || session.user.role !== 'admin') {
+    if (!session?.user?.role?.includes('admin')) {
       return NextResponse.json(
         { error: "Not authorized" },
-        { status: 401 }
+        { status: 403 }
       )
     }
 
     const posts = await prisma.post.findMany({
       where: {
         published: false,
+        status: 'PENDING'
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        image: true,
+        createdAt: true,
         author: {
           select: {
             name: true,
-            email: true,
-          },
-        },
+            image: true
+          }
+        }
       },
       orderBy: {
-        createdAt: 'desc',
-      },
+        createdAt: 'desc'
+      }
     })
 
-    return NextResponse.json({
-      success: true,
-      posts
-    })
+    return NextResponse.json({ posts })
   } catch (error) {
     console.error("Pending posts fetch error:", error)
     return NextResponse.json(

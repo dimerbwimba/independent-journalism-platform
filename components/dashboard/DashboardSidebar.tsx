@@ -11,8 +11,6 @@ import {
   UserIcon,
   ChevronUpIcon,
   ArrowRightOnRectangleIcon,
-  TagIcon,
-  ClipboardDocumentCheckIcon,
   ChartBarIcon,
   ClockIcon,
   BanknotesIcon,
@@ -70,16 +68,6 @@ const baseNavigation: NavigationItem[] = [
 
 // Admin-only navigation items
 const adminNavigation: NavigationItem[] = [
-  { 
-    name: 'Categories',
-    href: '/dashboard/categories',
-    icon: TagIcon,
-  },
-  {
-    name: 'Approve Articles',
-    href: '/dashboard/approve',
-    icon: ClipboardDocumentCheckIcon,
-  },
   {
     name: 'Global Analytics',
     href: '/dashboard/analytics',

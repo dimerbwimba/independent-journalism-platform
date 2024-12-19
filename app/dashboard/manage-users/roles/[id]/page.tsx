@@ -8,7 +8,6 @@ import {
   ExclamationCircleIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline'
-import { UserAvatar } from '@/components/UserAvatar'
 
 interface UserDetail {
   id: string
@@ -31,7 +30,7 @@ interface UserDetail {
 
 const AVAILABLE_ROLES = [
   { value: 'user', label: 'Regular User', description: 'Basic access to platform features' },
-  { value: 'moderator', label: 'Moderator', description: 'Can moderate content and handle reports' },
+  { value: 'reader', label: 'Reader', description: 'Can read articles and comments' },
   { value: 'admin', label: 'Administrator', description: 'Full access to all platform features' }
 ]
 
@@ -125,7 +124,7 @@ export default function UserRoleDetailPage() {
       {/* User Info */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex items-center gap-4">
-          <UserAvatar user={user} />
+         
           <div>
             <h2 className="text-xl font-semibold text-gray-900">{user.name}</h2>
             <p className="text-sm text-gray-500">{user.email}</p>

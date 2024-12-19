@@ -22,7 +22,7 @@ interface User {
 const ROLE_FILTERS = [
   { value: '', label: 'All Users' },
   { value: 'admin', label: 'Administrators' },
-  { value: 'moderator', label: 'Moderators' },
+  { value: 'reader', label: 'Readers' },
   { value: 'user', label: 'Regular Users' }
 ]
 
@@ -70,8 +70,8 @@ export function UsersListSidebar() {
     switch (role) {
       case 'admin':
         return <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Admin</span>
-      case 'moderator':
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Mod</span>
+      case 'reader':
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Reader</span>
       default:
         return <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">User</span>
     }

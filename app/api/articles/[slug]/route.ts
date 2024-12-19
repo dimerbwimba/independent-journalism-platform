@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/options";
 import prisma from "@/lib/prisma";
 
 export async function GET(
@@ -7,6 +9,10 @@ export async function GET(
 ) {
   const { slug } = await params
   try {
+    // Get current user session
+    const session = await getServerSession(authOptions)
+    
+
     const post = await prisma.post.findFirst({
       where: {
         slug: slug,
@@ -37,6 +43,14 @@ export async function GET(
           },
         },
         views: true,
+        savedBy: {
+          where: session?.user?.id ? {
+            userId: session.user.id
+          } : undefined,
+          select: {
+            id: true
+          }
+        }
       },
     })
 
@@ -119,6 +133,7 @@ export async function GET(
         categories: rp.categories.map(pc => pc.category)
       })),
       viewCount,
+      saved: post.savedBy?.some(save => save.id) ?? false
     }
 
     return NextResponse.json({ post: formattedPost })

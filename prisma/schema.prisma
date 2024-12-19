@@ -7,6 +7,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum UserRole {
+  reader
+  user
+  admin
+}
+
 model User {
   id                  String               @id @default(auto()) @map("_id") @db.ObjectId
   name                String?
@@ -14,7 +20,7 @@ model User {
   emailVerified       DateTime?
   image               String?
   password            String?
-  role                String?              @default("user")
+  role                UserRole            @default(reader)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   status              String               @default("ACTIVE") // ACTIVE, SUSPENDED, BANNED
@@ -31,6 +37,7 @@ model User {
   contacts            Contact[]
   reports             Report[]
   messages            Message[]
+  savedArticles       SavedArticle[]
 
   ContactResponse ContactResponse[]
 }
@@ -88,8 +95,16 @@ model Category {
   posts       CategoriesOnPosts[]
 }
 
+enum PostStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Post {
   id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  status    PostStatus @default(PENDING)
   title       String
   slug        String              @unique
   seoTitle    String?
@@ -108,6 +123,7 @@ model Post {
   shares      PostShare[]
   views       PostView[]
   reports     Report[]
+  savedBy     SavedArticle[]
 }
 
 model Video {
@@ -331,4 +347,18 @@ model ContactResponse {
 
   @@index([contactId])
   @@index([userId])
+}
+
+model SavedArticle {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }

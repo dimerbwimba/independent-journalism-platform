@@ -254,7 +254,7 @@ export default async function HomePage() {
 
               <div className="pt-4">
                 <Link
-                  href="/dashboard/monetization"
+                  href="/contact"
                   className="inline-flex items-center px-6 py-3 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors group"
                 >
                   Start Creating

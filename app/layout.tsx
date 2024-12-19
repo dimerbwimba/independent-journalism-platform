@@ -6,7 +6,9 @@ import MainLayout from '@/components/MainLayout'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
 import MainNav from '@/components/MainNav'
 import Footer from '@/components/Footer'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { toast, Toaster } from 'sonner'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,6 +23,19 @@ export default function RootLayout({
 }) {
   const pathname = usePathname()
   const isDashboard = pathname?.startsWith('/dashboard')
+  const searchParams = useSearchParams()
+  const message = searchParams.get('message')
+  const type = searchParams.get('type')
+
+  useEffect(() => {
+    if (message) {
+      if (type === 'error') {
+        toast.error(message)
+      } else {
+        toast.message(message)
+      }
+    }
+  }, [message, type])
 
   return (
     <html lang="en" className={inter.variable}>
@@ -32,6 +47,7 @@ export default function RootLayout({
           <MainLayout>
             {!isDashboard && <MainNav />}
             <main className={!isDashboard ? "pt-12" : ""}>
+              <Toaster /> 
               {children}
             </main>
             {!isDashboard && <Footer />}

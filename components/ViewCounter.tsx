@@ -25,7 +25,7 @@ export default function ViewCounter({ postId, initialCount = 0 }: ViewCounterPro
           localStorage.setItem('blog_session_id', sessionId);
         }
 
-        const response = await fetch(`/api/posts/${postId}/view`, {
+        const response = await fetch(`/api/articles/add/${postId}/view`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

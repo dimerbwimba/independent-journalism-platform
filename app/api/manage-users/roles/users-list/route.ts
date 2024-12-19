@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
+import { UserRole } from '@prisma/client'
 
 export async function GET(req: Request) {
   try {
@@ -23,7 +24,7 @@ export async function GET(req: Request) {
             { email: { contains: search, mode: 'insensitive' as const } }
           ]
         } : {},
-        role ? { role } : {}
+        role ? { role: role as UserRole } : {}
       ]
     }
 

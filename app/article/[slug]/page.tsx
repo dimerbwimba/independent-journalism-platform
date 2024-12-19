@@ -10,6 +10,7 @@ import PostReactions from "@/components/PostReactions";
 import ViewCounter from "@/components/ViewCounter";
 import NewsletterForm from "@/components/NewsletterForm";
 import ReportArticleButton from '@/components/article/ReportArticleButton'
+import SaveArticleButton from "@/components/article/SaveArticleButton";
 
 interface Category {
   id: string;
@@ -50,6 +51,7 @@ interface Post {
   reactions: Record<string, number>;
   shares: Record<string, number>;
   viewCount: number;
+  saved: boolean;
 }
 
 async function getArticle(slug: string) {
@@ -143,7 +145,7 @@ export default async function ArticlePage({
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const {slug} = await params
+  const { slug } = await params
   const session = await getServerSession(authOptions);
   const post = await getArticle(slug);
 
@@ -172,7 +174,10 @@ export default async function ArticlePage({
               {post.title}
             </h1>
             {post.description && (
-              <p className="mt-4 text-lg text-gray-600">{post.description}</p>
+              <p className="mt-4 text-lg text-gray-600">{post.description}
+              {JSON.stringify(post.saved)}
+              </p>
+
             )}
             <div className="mt-6 grid grid-cols-2 md:grid-cols-3 items-center justify-start gap-6">
               <div className="flex items-center">
@@ -203,10 +208,7 @@ export default async function ArticlePage({
                 </Link>
               </div>
               <ViewCounter postId={post.id} initialCount={post.viewCount} />
-
-              <ReportArticleButton postId={post.id} />
-
-
+              <SaveArticleButton postId={post.id} initialSaved={post.saved} />
             </div>
           </div>
         </div>
@@ -300,23 +302,26 @@ export default async function ArticlePage({
         className="max-w-[1400px] mx-auto lg:px-96 md:px-20 px-10 py-4 border-t border-gray-100"
       >
         <div className="max-w-3xl mx-auto">
-          {post.categories?.length > 0 && (
-            <div className=" py-4">
-              <div className="max-w-3xl mx-auto">
-                <div className="flex flex-wrap gap-2">
-                  {post.categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/categories/${cat.slug}`}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
+          <div className="flex justify-between items-center">
+            {post.categories?.length > 0 && (
+              <div className=" py-4">
+                <div className="max-w-3xl mx-auto">
+                  <div className="flex flex-wrap gap-2">
+                    {post.categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/categories/${cat.slug}`}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}{" "}
+            )}
+            <ReportArticleButton postId={post.id} />
+          </div>
           <CommentSection postId={post.id} currentUser={session?.user} />
         </div>
       </div>

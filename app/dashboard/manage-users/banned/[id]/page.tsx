@@ -9,7 +9,6 @@ import {
   ShieldExclamationIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline'
-import { UserAvatar } from '@/components/UserAvatar'
 
 interface UserDetail {
   id: string
@@ -117,7 +116,7 @@ export default function UserDetailPage() {
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <UserAvatar user={user}  />
+            {/* <UserAvatar user={user}  /> */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
               <p className="text-gray-500">{user.email}</p>

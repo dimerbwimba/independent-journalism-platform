@@ -51,7 +51,7 @@ export default function ShareButton({
 
   const handleShare = async (type: keyof ShareCounts) => {
     try {
-      const response = await fetch(`/api/posts/${postId}/share`, {
+      const response = await fetch(`/api/articles/add/${postId}/share`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type }),

@@ -86,7 +86,7 @@ export default function PostReactions({
     setIsLoading(true)
 
     try {
-      const response = await fetch(`/api/posts/${postId}/react`, {
+      const response = await fetch(`/api/articles/add/${postId}/react`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type })

@@ -94,65 +94,64 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Not authenticated" },
         { status: 401 }
       )
     }
 
-    // Get pagination parameters from URL
+    // Get search query from URL
     const { searchParams } = new URL(req.url)
+    const search = searchParams.get('search') || ''
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const skip = (page - 1) * limit
 
-    // Get total count for pagination
-    const total = await prisma.post.count({
-      where: {
-        authorId: session.user.id,
-      },
-    })
+    // Build the where clause for search
+    const where = {
+      authorId: session.user.id,
+      OR: search ? [
+        { title: { contains: search, mode: 'insensitive' as const } },
+        { description: { contains: search, mode: 'insensitive' as const } },
+        { content: { contains: search, mode: 'insensitive' as const } }
+      ] : undefined
+    }
 
-    // Get paginated posts
-    const posts = await prisma.post.findMany({
-      where: {
-        authorId: session.user.id,
-      },
-      include: {
-        categories: {
-          include: {
-            category: true,
-          },
+    // Get posts with search and pagination
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          image: true,
+          published: true,
+          createdAt: true,
+          views: {
+            select: {
+              id: true
+            }
+          }
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      skip,
-      take: limit,
-    })
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip,
+        take: limit
+      }),
+      prisma.post.count({ where })
+    ])
 
+    // Format posts for response
     const formattedPosts = posts.map(post => ({
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      seoTitle: post.seoTitle,
-      description: post.description,
-      image: post.image,
-      published: post.published,
-      createdAt: post.createdAt.toISOString(),
-      updatedAt: post.updatedAt.toISOString(),
-      categories: post.categories.map(pc => ({
-        id: pc.category.id,
-        name: pc.category.name,
-        slug: pc.category.slug,
-      })),
+      ...post,
+      views: post.views.length,
+      createdAt: post.createdAt.toISOString()
     }))
 
     return NextResponse.json({
-      success: true,
       posts: formattedPosts,
       pagination: {
         page,
@@ -164,10 +163,9 @@ export async function GET(req: Request) {
 
   } catch (error) {
     console.error("Posts fetch error:", error)
-    return NextResponse.json({
-      success: false,
-      error: "Failed to fetch posts",
-      posts: []
-    })
+    return NextResponse.json(
+      { error: "Failed to fetch posts" },
+      { status: 500 }
+    )
   }
 } 
