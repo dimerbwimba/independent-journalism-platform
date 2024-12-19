@@ -129,6 +129,7 @@ export async function GET(req: Request) {
           image: true,
           published: true,
           createdAt: true,
+          slug: true,
           views: {
             select: {
               id: true

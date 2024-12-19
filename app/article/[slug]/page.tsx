@@ -175,7 +175,6 @@ export default async function ArticlePage({
             </h1>
             {post.description && (
               <p className="mt-4 text-lg text-gray-600">{post.description}
-              {JSON.stringify(post.saved)}
               </p>
 
             )}

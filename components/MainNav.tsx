@@ -110,49 +110,40 @@ export default function MainNav() {
                   </SheetHeader>
                   <div className="mt-6 space-y-1">
                     {/* Admin Menu Items */}
-                    {session.user?.role === 'admin' && (
+                    {session.user?.role === 'admin' || session.user?.role === 'user' && (
                       <>
                         <div className="space-y-4">
                           <div>
                             <h3 className="px-4 text-lg font-medium text-gray-500">Admin Dashboard</h3>
                             <div className="border-t-2 border-gray-300" />
-
                             <div className="mt-2 space-y-1">
-                              <Link
-                                href="/dashboard"
-                                className="flex flex-col px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
-                              >
-                                <span className="font-medium">Dashboard</span>
-                                <span className="text-xs text-gray-500">Platform stats and insights</span>
-                              </Link>
+
+                              {session.user?.status === 'BANNED' ?
+                                <div className="flex bg-red-100 rounded-md p-4 justify-center items-center flex-col space-y-1">
+                                  <span className="font-semibold text-red-600">Banned</span>
+                                  <span className="text-xs text-gray-500 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    You are banned from the platform
+                                  </span>
+                                </div>
+                                :
+                                <Link
+                                  href="/dashboard"
+                                  className="flex flex-col px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                                >
+                                  <div>
+                                    <span className="font-medium">Dashboard</span>
+                                    <span className="text-xs text-gray-500">Platform stats and insights</span>
+                                  </div>
+                                </Link>
+                              }
                             </div>
                           </div>
                           <div className="border-t border-gray-100" />
                         </div>
                       </>
-                    )}
-
-                    {/* User Menu Items */}
-                    {session.user?.role === 'user' && (
-                       <>
-                       <div className="space-y-4">
-                         <div>
-                           <h3 className="px-4 text-lg font-medium text-gray-500">Admin Dashboard</h3>
-                           <div className="border-t-2 border-gray-300" />
-
-                           <div className="mt-2 space-y-1">
-                             <Link
-                               href="/dashboard"
-                               className="flex flex-col px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
-                             >
-                               <span className="font-medium">Dashboard</span>
-                               <span className="text-xs text-gray-500">Platform stats and insights</span>
-                             </Link>
-                           </div>
-                         </div>
-                         <div className="border-t border-gray-100" />
-                       </div>
-                     </>
                     )}
 
                     {/* Common Menu Items */}

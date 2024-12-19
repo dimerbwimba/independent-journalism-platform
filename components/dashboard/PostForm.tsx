@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PreviewPost from "./PreviewPost";
 import MDEditor from "@uiw/react-md-editor";
-import rehypeSanitize from "rehype-sanitize";
 import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 interface Category {
   id: string;
@@ -26,9 +26,10 @@ interface Post {
 
 interface PostFormProps {
   post?: Post;
+  isAdminEdit?: boolean;
 }
 
-export default function PostForm({ post }: PostFormProps) {
+export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -90,11 +91,11 @@ export default function PostForm({ post }: PostFormProps) {
     try {
       new URL(url) // Basic URL validation
       const isImageUrl = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)
-      
+
       if (!isImageUrl) {
         return false
       }
-      
+
       return true
     } catch {
       return false
@@ -135,7 +136,7 @@ export default function PostForm({ post }: PostFormProps) {
         const data = await response.json();
         setError(data.error || "Something went wrong");
       }
-    } catch{
+    } catch {
       setError("Failed to save post");
     } finally {
       setIsLoading(false);
@@ -172,149 +173,106 @@ export default function PostForm({ post }: PostFormProps) {
         />
       ) : (
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="seoTitle"
-              className="block text-sm font-medium text-gray-700"
-            >
-              SEO Title
-            </label>
-            <input
-              type="text"
-              id="seoTitle"
-              value={formData.seoTitle}
-              onChange={(e) =>
-                setFormData({ ...formData, seoTitle: e.target.value })
-              }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-              placeholder="Optimized title for search engines"
-            />
-            <p className="mt-1 text-sm text-gray-500">
-              {formData.seoTitle.length}/60 characters recommended
-            </p>
-          </div>
-
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              rows={3}
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-              placeholder="Brief description of the post"
-            />
-            <p className="mt-1 text-sm text-gray-500">
-              {formData.description.length}/160 characters recommended
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Image URL
-            </label>
-            <div className="space-y-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={formData.image}
-                  onChange={(e) => {
-                    const url = e.target.value.trim()
-                    const isValid = validateImageUrl(url)
-                    setFormData(prev => ({ ...prev, image: url }))
-                    setIsImageValid(isValid)
-                    if (!isValid && url) {
-                      setError('Please enter a valid image URL (jpg, jpeg, png, webp, gif, svg)')
-                    } else {
-                      setError(null)
-                    }
-                  }}
-                  placeholder="https://example.com/image.jpg"
-                  className={`mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 ${
-                    isImageValid ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
-                  }`}
-                />
-                {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
-              </div>
-
-              <div className="text-xs text-gray-500">
-                Supported formats: JPG, JPEG, PNG, WebP, GIF, SVG
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Categories
-            </label>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {categories.map((category) => (
-                <label
-                  key={category.id}
-                  className="flex items-center space-x-2"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.categoryIds.includes(category.id)}
-                    onChange={() => handleCategoryChange(category.id)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">{category.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div data-color-mode="light">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Content
-            </label>
-            <MDEditor
-              value={content}
-              onChange={(value) => setContent(value || "")}
-              preview="edit"
-              previewOptions={{
-                rehypePlugins: [[rehypeSanitize]],
-              }}
-              height={400}
-              className="w-full"
-              textareaProps={{
-                placeholder: "Write your post content here...",
-              }}
-            />
-          </div>
-
-          {/* Only show publish option for admin users */}
-          {isAdmin && (
-            <div className="flex items-center">
+          <div className={cn(
+            "space-y-6",
+            !isAdminEdit && post && "opacity-50 pointer-events-none"
+          )}>
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Title
+              </label>
               <input
-                id="published"
+                id="title"
+                type="text"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="seoTitle"
+                className="block text-sm font-medium text-gray-700"
+              >
+                SEO Title
+              </label>
+              <input
+                id="seoTitle"
+                type="text"
+                value={formData.seoTitle}
+                onChange={(e) =>
+                  setFormData({ ...formData, seoTitle: e.target.value })
+                }
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                placeholder="Optimized title for search engines"
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                {formData.seoTitle.length}/60 characters recommended
+              </p>
+            </div>
+
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                placeholder="Brief description of the post"
+                rows={3}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                {formData.description.length}/160 characters recommended
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Image URL
+              </label>
+              <div className="space-y-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formData.image}
+                    onChange={(e) => {
+                      const url = e.target.value.trim()
+                      const isValid = validateImageUrl(url)
+                      setFormData(prev => ({ ...prev, image: url }))
+                      setIsImageValid(isValid)
+                      if (!isValid && url) {
+                        setError('Please enter a valid image URL (jpg, jpeg, png, webp, gif, svg)')
+                      } else {
+                        setError(null)
+                      }
+                    }}
+                    placeholder="https://example.com/image.jpg"
+                    className={`mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 ${isImageValid ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                      }`}
+                  />
+                  {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Supported formats: JPG, JPEG, PNG, WebP, GIF, SVG
+                </div>
+              </div>
+            </div>
+            {isAdmin && <div className="flex items-center">
+              <input
                 type="checkbox"
                 checked={formData.published}
                 onChange={(e) =>
@@ -322,14 +280,52 @@ export default function PostForm({ post }: PostFormProps) {
                 }
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <label
-                htmlFor="published"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Publish post
+              <label className="ml-2 block text-sm text-gray-900">
+                Publish this post
               </label>
+            </div>}
+
+
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Content
+            </label>
+            <div className="mt-1">
+              <MDEditor
+                value={content}
+                onChange={(value) => setContent(value || '')}
+                preview="edit"
+                height={400}
+                data-color-mode="light"
+              />
             </div>
-          )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Categories
+            </label>
+            <div className="mt-1">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {categories.map((category) => (
+                  <label
+                    key={category.id}
+                    className="flex items-center space-x-2"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.categoryIds.includes(category.id)}
+                      onChange={() => handleCategoryChange(category.id)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">{category.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 

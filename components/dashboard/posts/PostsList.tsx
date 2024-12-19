@@ -20,6 +20,7 @@ interface Post {
   published: boolean
   createdAt: string
   views: number
+  slug: string
 }
 
 interface PostsListProps {
@@ -129,7 +130,7 @@ export default function PostsList({ searchQuery }: PostsListProps) {
               </div>
               <div className="flex items-center gap-2">
                 <Link
-                  href={`/dashboard/posts/${post.id}/edit`}
+                  href={`/dashboard/posts/${post.slug}/edit`}
                   className="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
                   <PencilIcon className="h-4 w-4 mr-1" />
@@ -156,7 +157,7 @@ export default function PostsList({ searchQuery }: PostsListProps) {
           </p>
           <div className="mt-6">
             <Link
-              href="/dashboard/posts/new"
+              href="/dashboard/posts/create"
               className="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
             >
               <PencilIcon className="h-4 w-4 mr-2" />

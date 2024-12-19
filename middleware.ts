@@ -6,6 +6,11 @@ export default withAuth(
     const token = req.nextauth.token
     const isAccessingDashboard = req.nextUrl.pathname.startsWith('/dashboard')
 
+    // If user is banned, redirect to banned page with message
+    if (token?.status === 'BANNED') {
+      const redirectUrl = new URL('/banned', req.url)
+      return NextResponse.redirect(redirectUrl)
+    }
     // If user is a reader and trying to access dashboard
     if (token?.role === 'reader' && isAccessingDashboard) {
       // Add a searchParam to trigger toast notification
@@ -17,6 +22,11 @@ export default withAuth(
 
     // If user is trying to access admin routes without admin role
     if (req.nextUrl.pathname.startsWith('/dashboard/posts/pending') && !token?.role?.includes('admin')) {
+      return NextResponse.redirect(new URL('/dashboard', req.url))
+    }
+    
+    // If user is trying to access admin routes without admin role
+    if (req.nextUrl.pathname.startsWith('/dashboard/manage-users') && !token?.role?.includes('admin')) {
       return NextResponse.redirect(new URL('/dashboard', req.url))
     }
 
