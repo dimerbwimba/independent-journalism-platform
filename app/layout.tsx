@@ -7,7 +7,7 @@ import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
 import MainNav from '@/components/MainNav'
 import Footer from '@/components/Footer'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { toast, Toaster } from 'sonner'
 
 const inter = Inter({
@@ -16,11 +16,7 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isDashboard = pathname?.startsWith('/dashboard')
   const searchParams = useSearchParams()
@@ -38,20 +34,32 @@ export default function RootLayout({
   }, [message, type])
 
   return (
+    <MainLayout>
+      {!isDashboard && <MainNav />}
+      <main className={!isDashboard ? "pt-12" : ""}>
+        {children}
+      </main>
+      {!isDashboard && <Footer />}
+    </MainLayout>
+  )
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
     <html lang="en" className={inter.variable}>
       <head>
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className="font-sans">
         <Providers>
-          <MainLayout>
-            {!isDashboard && <MainNav />}
-            <main className={!isDashboard ? "pt-12" : ""}>
-              <Toaster /> 
-              {children}
-            </main>
-            {!isDashboard && <Footer />}
-          </MainLayout>
+          <Toaster />
+          <Suspense fallback={<div>Loading...</div>}>
+            <MainContent>{children}</MainContent>
+          </Suspense>
           <ProgressBar
             height="4px"
             color="#2563eb"
