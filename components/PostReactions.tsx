@@ -42,9 +42,18 @@ export default function PostReactions({
   const [reactions, setReactions] = useState(initialReactions)
   const [isLoading, setIsLoading] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
+    if (!isClient) {
+      return // Return early if not client-side
+    }
+    
     if (variant === 'desktop') {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -74,7 +83,11 @@ export default function PostReactions({
 
       return () => observer.disconnect()
     }
-  }, [variant])
+  }, [variant, isClient])
+
+  if (!isClient) {
+    return null // Return null on server-side
+  }
 
   const handleReaction = async (type: string) => {
     if (!currentUser) {

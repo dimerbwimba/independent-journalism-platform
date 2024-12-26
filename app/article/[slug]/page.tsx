@@ -11,7 +11,7 @@ import ViewCounter from "@/components/ViewCounter";
 import NewsletterForm from "@/components/NewsletterForm";
 import ReportArticleButton from '@/components/article/ReportArticleButton'
 import SaveArticleButton from "@/components/article/SaveArticleButton";
-// import ArticleFAQs from '@/components/article/ArticleFAQs'
+import ArticleFAQs from '@/components/article/ArticleFAQs'
 
 interface Category {
   id: string;
@@ -297,7 +297,7 @@ export default async function ArticlePage({
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
-            {/* <ArticleFAQs faqs={post.faqs} /> */}
+            <ArticleFAQs faqs={post.faqs} />
         </div>
       </div>
 
