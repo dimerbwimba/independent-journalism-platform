@@ -9,12 +9,59 @@ import {
 } from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Independent Journalism Platform",
+  title: "Contact Us | Independent Travel Blog",
   description: "Get in touch with our team. We're here to help with any questions about our platform, content creation, or monetization program.",
+  keywords: [
+    "contact us",
+    "get in touch",
+    "support",
+    "help",
+    "content creation",
+    "monetization",
+    "technical support",
+    "partnership",
+    "travel blog"
+  ],
+  authors: [{ name: "Bwimba Mihandgo Dimer" }],
+  creator: "Bwimba Mihandgo Dimer", 
+  publisher: "Independent Travel Blog",
   openGraph: {
-    title: "Contact Us | Independent Journalism Platform",
+    title: "Contact Us | Independent Travel Blog",
     description: "Get in touch with our team. We're here to help with any questions about our platform, content creation, or monetization program.",
-    url: "https://yourplatform.com/contact",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/contact`,
+    siteName: "Independent Travel Blog",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/contact-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Contact Us - Independent Travel Blog",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Us | Independent Travel Blog", 
+    description: "Get in touch with our team. We're here to help with any questions.",
+    images: ["/contact-og.jpg"],
+    creator: "@travelwing",
+    site: "@travelwing",
+  },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/contact`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -33,7 +80,7 @@ const contactInfo = [
     details: "@yourplatform",
     description: "Follow us for updates",
     action: "Follow us",
-    href: "https://twitter.com/yourplatform",
+    href: "https://twitter.com/travelwing",
   },
 ];
 
@@ -236,20 +283,45 @@ export default async function ContactPage() {
           </div>
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div className="max-w-2xl  mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <ChatBubbleLeftRightIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+            <div className="flex flex-col space-y-6">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <ChatBubbleLeftRightIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+                </div>
+                <div className="ml-3">
+                  <h2 className="text-lg font-semibold text-yellow-800">Sign in Required</h2>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Please{" "}
+                    <a href="/auth/signin" className="font-medium underline text-yellow-700 hover:text-yellow-600">
+                      sign in
+                    </a>{" "}
+                    to access our contact form.
+                  </p>
+                </div>
               </div>
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  Please{" "}
-                  <a href="/auth/signin" className="font-medium underline text-yellow-700 hover:text-yellow-600">
-                    sign in
-                  </a>{" "}
-                  to access our contact form.
+
+              <div className="prose prose-yellow max-w-none">
+                <h3 className="text-yellow-800 font-medium">Why Sign In?</h3>
+                <ul className="text-sm text-yellow-700 list-disc pl-5 space-y-2">
+                  <li>Submit inquiries about content creation and publishing</li>
+                  <li>Get detailed information about our monetization program</li>
+                  <li>Learn about earning opportunities through your content</li>
+                  <li>Receive personalized support from our team</li>
+                  <li>Track and manage your support requests</li>
+                </ul>
+
+                <p className="text-sm text-yellow-700 mt-4">
+                  Our support team is ready to assist you with:
                 </p>
+                <ul className="text-sm text-yellow-700 list-disc pl-5 space-y-2">
+                  <li>Content creation guidelines and best practices</li>
+                  <li>Monetization program details and eligibility</li>
+                  <li>Payment processes and revenue sharing</li>
+                  <li>Technical support and platform features</li>
+                  <li>Partnership opportunities and collaborations</li>
+                </ul>
               </div>
             </div>
           </div>

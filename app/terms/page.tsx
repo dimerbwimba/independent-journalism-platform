@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/outline"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Independent Journalism Platform",
+  title: "Terms of Service | Travel blog",
   description: "Our comprehensive terms of service outline the rules, guidelines, and agreements that govern the use of our platform, including content creation, monetization, privacy, and user responsibilities.",
   keywords: [
     "terms of service",
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
     "intellectual property rights",
     "platform rules",
     "content creator terms",
-    "independent journalism"
+    "travel blog"
   ],
   authors: [{ name: "Bwimba Mihandgo Dimer" }],
   creator: "Bwimba Mihandgo Dimer",
-  publisher: "Independent Journalism Platform",
-  openGraph: {
-    title: "Terms of Service | Independent Journalism Platform",
+  publisher: "Independent Travel blog ",
+  openGraph: {  
+    title: "Terms of Service | Independent Travel blog ",
     description: "Our comprehensive terms of service outline the rules, guidelines, and agreements that govern the use of our platform, including content creation, monetization, privacy, and user responsibilities.",
-    url: "https://yourplatform.com/terms",
-    siteName: "Independent Journalism Platform",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/terms`,
+    siteName: "Independent Travel blog ",
     locale: "en_US",
     type: "website",
     images: [
@@ -41,20 +41,20 @@ export const metadata: Metadata = {
         url: "/terms-og.jpg",
         width: 1200,
         height: 630,
-        alt: "Terms of Service - Independent Journalism Platform",
+        alt: "Terms of Service - Independent Travel blog",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terms of Service | Independent Journalism Platform",
+    title: "Terms of Service | Independent Travel blog",
     description: "Our comprehensive terms of service outline the rules, guidelines, and agreements that govern the use of our platform.",
     images: ["/terms-og.jpg"],
     creator: "@yourplatform",
     site: "@yourplatform",
   },
   alternates: {
-    canonical: "https://yourplatform.com/terms",
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/terms`,
   },
   robots: {
     index: true,
@@ -103,7 +103,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 m-0">Introduction</h2>
             </div>
             <p className="text-gray-600">
-              Welcome to Independent Journalism Platform. By accessing or using our platform, 
+              Welcome to Independent Travel blog. By accessing or using our platform, 
               you agree to be bound by these Terms of Service. Please read these terms carefully 
               before using our services.
             </p>

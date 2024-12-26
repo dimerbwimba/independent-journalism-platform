@@ -23,6 +23,7 @@ export async function GET(
         authorId: session.user.id
       },
       include: {
+        faqs: true,
         author: {
           select: {
             name: true,

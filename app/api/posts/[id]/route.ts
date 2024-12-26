@@ -3,66 +3,6 @@ import { NextResponse } from "next/server"
 import { authOptions } from "@/app/api/auth/options"
 import prisma from "@/lib/prisma"
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params
-  try {
-    const session = await getServerSession(authOptions)
-
-    if (!session) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      )
-    }
-
-    const { title, content, published, categories, image } = await req.json()
-
-    const post = await prisma.post.update({
-      where: {
-        id: id,
-        authorId: session.user.id,
-      },
-      data: {
-        title,
-        content,
-        published,
-        image,
-        categories: {
-          deleteMany: {},
-          create: categories.map((id: string) => ({
-            category: {
-              connect: { id }
-            },
-            assignedAt: new Date(),
-          })),
-        },
-      },
-      include: {
-        categories: {
-          include: {
-            category: true,
-          },
-        },
-      },
-    })
-
-    const formattedPost = {
-      ...post,
-      categories: post.categories.map(pc => pc.category),
-    }
-
-    return NextResponse.json({ post: formattedPost })
-  } catch (error) {
-    console.error("Post update error:", error)
-    return NextResponse.json(
-      { error: "Failed to update post" },
-      { status: 500 }
-    )
-  }
-}
 
 export async function DELETE(
   req: Request,
@@ -96,8 +36,12 @@ export async function DELETE(
 
     // Delete the post and its relationships
     await prisma.$transaction([
-      // Delete category relationships
+      // Delete category relationship
       prisma.categoriesOnPosts.deleteMany({
+        where: { postId: id }
+      }),
+      // Delete faq relationship
+      prisma.fAQ.deleteMany({
         where: { postId: id }
       }),
       // Delete the post

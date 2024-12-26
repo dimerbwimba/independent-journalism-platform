@@ -39,7 +39,7 @@ console.log(recentPosts)
           <loc>${baseUrl}/article/${post.slug}</loc>
           <news:news>
             <news:publication>
-              <news:name>Independent Journalism Platform</news:name>
+              <news:name>Independent Travel Blog</news:name>
               <news:language>en</news:language>
             </news:publication>
             <news:publication_date>${post.createdAt.toISOString()}</news:publication_date>

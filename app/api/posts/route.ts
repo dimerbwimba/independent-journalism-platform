@@ -13,79 +13,67 @@ function generateSlug(text: string) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Not authenticated" },
         { status: 401 }
       )
     }
 
-    const { title, seoTitle, description, content, published, categories, image } = await req.json()
+    const data = await req.json()
 
-    // Validate required fields
-    if (!title || !content) {
-      return NextResponse.json(
-        { error: "Title and content are required" },
-        { status: 400 }
-      )
+    const { title, content, description, image, published, faqs, categories, seoTitle } = data
+
+    if (!title) {
+      return NextResponse.json({ error: "Title is required" }, { status: 400 })
+    }
+    if (!content) {
+      return NextResponse.json({ error: "Content is required" }, { status: 400 })
+    }
+    if (!faqs || !Array.isArray(faqs) || faqs.length === 0) {
+      return NextResponse.json({ error: "At least one FAQ is required" }, { status: 400 })
     }
 
-    // Generate slug from seoTitle or title
-    const baseSlug = generateSlug(seoTitle || title)
-    
-    // Check if slug exists and generate a unique one if needed
+    const baseSlug = generateSlug(title)
     let slug = baseSlug
     let counter = 1
-    let slugExists = true
-
-    // Use a do-while loop instead of while(true)
-    do {
-      const existingPost = await prisma.post.findFirst({
-        where: { slug }
-      })
-      
-      if (!existingPost) {
-        slugExists = false
-      } else {
-        slug = `${baseSlug}-${counter}`
-        counter++
-      }
-    } while (slugExists && counter < 3) // Add a reasonable limit
-
-    // If we couldn't generate a unique slug after 100 tries, return an error
-    if (slugExists) {
-      return NextResponse.json(
-        { error: "Could not generate unique slug" },
-        { status: 400 }
-      )
+    
+    while (await prisma.post.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`
+      counter++
     }
 
     const post = await prisma.post.create({
       data: {
         title,
+        content,
         seoTitle,
         description,
-        content,
-        slug,
-        published,
         image,
+        published,
+        slug:generateSlug(seoTitle),
         authorId: session.user.id,
-        categories: {
+        status: published ? 'PENDING' : 'DRAFT',
+        categories: categories ? {
           create: categories.map((id: string) => ({
             category: {
               connect: { id }
             }
           }))
-        }
+        } : undefined
       }
     })
 
+    if(faqs){
+      await prisma.fAQ.createMany({
+        data: faqs.map((faq: any) => ({ ...faq, postId: post.id }))
+      })
+    }
     return NextResponse.json({ success: true, post })
   } catch (error) {
     console.error("Post creation error:", error)
     return NextResponse.json(
-      { error: "Failed to create post" },
+      { error: "Failed to create post", details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
@@ -147,6 +135,7 @@ export async function GET(req: Request) {
 
     // Format posts for response
     const formattedPosts = posts.map(post => ({
+      
       ...post,
       views: post.views.length,
       createdAt: post.createdAt.toISOString()

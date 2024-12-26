@@ -16,9 +16,14 @@ interface Post {
   image?: string
   published: boolean
   authorId: string
+  faqs: Faq[]
   categories: Category[]
 }
-
+interface Faq {
+  id: string
+  question: string
+  answer: string
+}
 interface Category {
   id: string
   name: string

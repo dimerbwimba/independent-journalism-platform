@@ -12,49 +12,49 @@ import {
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: "Independent Journalism Platform | Share Your Voice, Earn From Content",
-  description: "Discover quality articles from independent voices worldwide. Join our community of writers, share your stories, and earn through our fair monetization program.",
+  title: "Travel Stories & Adventures | Share Your Journey, Inspire Others",
+  description: "Discover amazing travel stories from adventurers worldwide. Share your own journey, connect with fellow travelers, and inspire others with your unique experiences.",
   keywords: [
-    "independent journalism",
-    "content platform",
-    "writer community",
-    "content monetization",
-    "digital publishing",
-    "blog platform",
-    "independent writers",
-    "content creators",
-    "journalism platform",
-    "books & journalism"
+    "travel blog",
+    "travel stories",
+    "travel adventures",
+    "travel community",
+    "travel inspiration",
+    "travel tips",
+    "travel guides",
+    "travel photography",
+    "travel experiences",
+    "world travel"
   ],
   authors: [{ name: "Bwimba Mihandgo Dimer" }],
   creator: "Bwimba Mihandgo Dimer",
-  publisher: "Independent Journalism Platform",
+  publisher: "Travel Stories & Adventures",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://yourplatform.com",
-    siteName: "Independent Journalism Platform",
-    title: "Independent Journalism Platform | Share Your Voice, Earn From Content",
-    description: "Discover quality articles from independent voices worldwide. Join our community of writers, share your stories, and earn through our fair monetization program.",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`,
+    siteName: "Travel Stories & Adventures",
+    title: "Travel Stories & Adventures | Share Your Journey, Inspire Others",
+    description: "Discover amazing travel stories from adventurers worldwide. Share your own journey, connect with fellow travelers, and inspire others with your unique experiences.",
     images: [
       {
-        url: "/og-image.jpg", // Add this image to your public folder
+        url: "/og-travel-image.jpg", // Add this image to your public folder
         width: 1200,
         height: 630,
-        alt: "Independent Journalism Platform",
+        alt: "Travel Stories & Adventures",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Independent Journalism Platform | Share Your Voice, Earn From Content",
-    description: "Discover quality articles from independent voices worldwide. Join our community of writers, share your stories, and earn through our fair monetization program.",
-    images: ["/og-image.jpg"],
-    creator: "@yourplatform",
-    site: "@yourplatform",
+    title: "Travel Stories & Adventures | Share Your Journey, Inspire Others",
+    description: "Discover amazing travel stories from adventurers worldwide. Share your own journey, connect with fellow travelers, and inspire others with your unique experiences.",
+    images: ["/og-travel-image.jpg"],
+    creator: "@travelstories",
+    site: "@travelstories",
   },
   alternates: {
-    canonical: "https://yourplatform.com",
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`,
   },
   robots: {
     index: true,
@@ -185,10 +185,10 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-
+     
       {/* Add Creator Banner Section - after Featured Article */}
-      <section className="py-16 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800">
-        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
+      <section className="py-16 bg-gradient-to-br from-green-600 via-green-700 to-green-800">
+        <div className=" relative max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="text-white space-y-6">
               <div>
@@ -262,8 +262,7 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-
-            <div className="relative hidden md:block">
+            <div className="relative md:block">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-transparent opacity-50 rounded-2xl" />
               <div className="relative bg-blue-500/20 backdrop-blur-sm rounded-2xl p-8 border border-blue-400/20">
                 <div className="space-y-6">
@@ -295,7 +294,7 @@ export default async function HomePage() {
 
                   <div className="p-4 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-lg backdrop-blur-sm border border-blue-400/10">
                     <p className="text-sm text-blue-100">
-                    &quot;I&apos;ve been able to share my knowledge and earn
+                      &quot;I&apos;ve been able to share my knowledge and earn
                       consistently. The platform&apos;s support has been incredible!&quot;
                     </p>
                     <div className="mt-4 flex items-center gap-3">
@@ -314,8 +313,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      {/* Featured Article */}
-      {featuredArticle && (
+
+       {/* Featured Article */}
+       {featuredArticle && (
         <section className="bg-white">
           <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
             <div className="grid md:grid-cols-2 gap-12 border-b-2 border-gray-800 items-center py-12">
@@ -344,7 +344,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
       {/* Popular Creators Section */}
       <section className="pt-12 bg-gray-50">
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
@@ -355,7 +354,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 border-b-2 border-gray-800 pb-12">
             {popularCreators.map((creator: Creator) => (
               <div
                 key={creator.id}
@@ -413,7 +412,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      
+
 
       {/* Popular This Week Section */}
       <section className="pt-12 bg-white">
@@ -451,7 +450,7 @@ export default async function HomePage() {
                     </span>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-2">
                   {article.categories[0] && (
                     <span className="text-sm text-blue-600 font-semibold">
                       {article.categories[0].name}
@@ -692,27 +691,27 @@ export default async function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Independent Journalism Platform",
-            url: "https://yourplatform.com",
+            name: "Travel Wing",
+            url: "https://travelwing.com",
             potentialAction: {
               "@type": "SearchAction",
               target: {
                 "@type": "EntryPoint",
-                urlTemplate: "https://yourplatform.com/search?q={search_term_string}",
+                urlTemplate: "https://travelwing.com/search?q={search_term_string}",
               },
               "query-input": "required name=search_term_string",
             },
             sameAs: [
-              "https://twitter.com/yourplatform",
-              "https://linkedin.com/company/yourplatform",
-              "https://facebook.com/yourplatform",
+              "https://twitter.com/travelwing",
+              "https://linkedin.com/company/travelwing",
+              "https://facebook.com/travelwing",
             ],
             publisher: {
               "@type": "Organization",
-              name: "Independent Journalism Platform",
+              name: "Travel Wing",
               logo: {
                 "@type": "ImageObject",
-                url: "https://yourplatform.com/logo.png",
+                url: "https://travelwing.com/logo.png",
               },
               founder: {
                 "@type": "Person",
@@ -727,7 +726,7 @@ export default async function HomePage() {
             },
             about: {
               "@type": "Thing",
-              description: "An independent journalism platform empowering voices through quality content and fair monetization.",
+              description: "Travel Wing is a travel blog that shares travel stories, tips, and guides from around the world.",
             },
             offers: {
               "@type": "Offer",

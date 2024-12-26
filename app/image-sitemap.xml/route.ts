@@ -98,8 +98,8 @@ export async function GET() {
         <loc>${baseUrl}</loc>
         <image:image>
           <image:loc>${baseUrl}/logo.png</image:loc>
-          <image:title>Independent Journalism Platform Logo</image:title>
-          <image:caption>Official logo of Independent Journalism Platform</image:caption>
+          <image:title>Independent Travel Blog Logo</image:title>
+          <image:caption>Official logo of Independent Travel Blog</image:caption>
         </image:image>
       </url>
     </urlset>`

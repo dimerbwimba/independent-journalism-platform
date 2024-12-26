@@ -12,17 +12,17 @@ import {
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: 'About Us | Independent Journalism Platform',
-  description: 'Founded by Bwimba Mihandgo Dimer, we\'re democratizing journalism through a platform that empowers independent voices and rewards quality content.',
+  title: 'About Us | Independent Travel Blog',
+  description: 'Founded by Bwimba Mihandgo Dimer, we\'re sharing authentic travel experiences and stories from DRC Congo and beyond, empowering independent voices in travel journalism.',
   openGraph: {
-    title: 'About Us | Independent Journalism Platform',
-    description: 'Founded by Bwimba Mihandgo Dimer, we\'re democratizing journalism through a platform that empowers independent voices and rewards quality content.',
+    title: 'About Us | Independent Travel Blog',
+    description: 'Founded by Bwimba Mihandgo Dimer, we\'re sharing authentic travel experiences and stories from DRC Congo and beyond, empowering independent voices in travel journalism.',
     images: [
       {
         url: '/about-hero.jpg',
         width: 1200,
         height: 630,
-        alt: 'About Us Hero Image',
+        alt: 'About Us - Independent Travel Blog',
       }
     ],
     locale: 'en_US',
@@ -30,30 +30,48 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About Us | Independent Journalism Platform',
-    description: 'Founded by Bwimba Mihandgo Dimer, we\'re democratizing journalism through a platform that empowers independent voices and rewards quality content.',
+    title: 'About Us | Independent Travel Blog',
+    description: 'Founded by Bwimba Mihandgo Dimer, we\'re sharing authentic travel experiences and stories from DRC Congo and beyond.',
     images: ['/about-hero.jpg'],
   },
   keywords: [
-    'independent journalism',
-    'content platform',
-    'Bwimba Mihandgo Dimer',
-    'DRC Congo',
+    'travel blog',
+    'DRC Congo travel',
     'North Kivu',
-    'content monetization',
-    'digital publishing',
-    'writer platform',
-    'journalism platform',
-    'content creators'
+    'African travel',
+    'travel stories',
+    'travel content',
+    'travel experiences',
+    'travel writing',
+    'travel journalism',
+    'authentic travel'
   ],
   authors: [{ name: 'Bwimba Mihandgo Dimer' }],
   creator: 'Bwimba Mihandgo Dimer',
-  publisher: 'Independent Journalism Platform',
+  publisher: 'Independent Travel Blog',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
+  other: {
+    "script:ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Independent Travel Blog",
+      "description": "A platform for authentic travel stories and experiences from DRC Congo and beyond.",
+      "founder": {
+        "@type": "Person",
+        "name": "Bwimba Mihandgo Dimer"
+      },
+      "url": process.env.NEXT_PUBLIC_APP_URL,
+      "sameAs": [
+        "https://twitter.com/yourtravelblog",
+        "https://facebook.com/yourtravelblog",
+        "https://instagram.com/yourtravelblog"
+      ]
+    })
+  }
 }
 
 function calculateAge(birthYear: number): number {
@@ -100,11 +118,11 @@ export default function AboutPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl blur-2xl opacity-10"></div>
               <Image
-                src="/founder.jpg" // Add founder's image
+                src="/seo.svg" // Add founder's image
                 alt="Bwimba Mihandgo Dimer"
                 width={400}
                 height={500}
-                className="rounded-2xl shadow-xl relative"
+                className="rounded-2xl  relative"
               />
             </div>
             <div className="space-y-6">
@@ -149,7 +167,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <NewspaperIcon className="w-6 h-6 text-blue-600" />
@@ -198,9 +216,8 @@ export default function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed">
-                To create a platform where independent voices can thrive, where quality journalism 
-                meets fair compensation, and where readers can access diverse perspectives from 
-                around the world.
+                To showcase the beauty, culture, and stories of DRC Congo and beyond through 
+                authentic travel experiences and compelling storytelling.
               </p>
               <div className="mt-8 space-y-4">
                 <div className="flex items-center gap-3">

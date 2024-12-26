@@ -30,42 +30,47 @@ async function getCategories() {
 }
 
 export const metadata: Metadata = {
-  title: "Explore Categories | Independent Journalism Platform",
-  description: "Discover articles across various topics - from technology to lifestyle. Find expert insights, analysis, and stories from independent voices in your favorite categories.",
+  title: "Travel Categories & Destinations | Travel Wing Blog",
+  description: "Explore travel destinations, tips, and guides across various categories. From adventure travel to luxury getaways, find expert travel insights and stories from experienced travelers.",
   keywords: [
-    "article categories",
-    "content topics",
-    "blog categories",
-    "independent journalism",
-    "expert insights",
-    "knowledge hub",
-    "content discovery",
-    "topic exploration",
-    "curated content",
-    "specialized articles"
+    "travel categories",
+    "travel destinations",
+    "travel guides",
+    "adventure travel",
+    "luxury travel",
+    "travel tips",
+    "travel blog",
+    "travel inspiration",
+    "travel planning",
+    "travel experiences",
+    "world destinations",
+    "travel wing"
   ],
   openGraph: {
     type: "website",
-    title: "Explore Categories | Independent Journalism Platform",
-    description: "Discover articles across various topics - from technology to lifestyle. Find expert insights, analysis, and stories from independent voices in your favorite categories.",
-    url: "https://yourplatform.com/categories",
+    title: "Travel Categories & Destinations | Travel Wing Blog",
+    description: "Discover amazing travel destinations and expert travel guides. Find inspiration for your next adventure with our curated travel categories and insider tips.",
+    url: "https://travelwing.com/categories",
     images: [
       {
-        url: "/categories-og.jpg",
+        url: "/travel-categories-og.jpg",
         width: 1200,
         height: 630,
-        alt: "Explore Content Categories",
+        alt: "Explore Travel Categories",
       }
     ],
+    siteName: "Travel Wing",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Explore Categories | Independent Journalism Platform",
-    description: "Discover articles across various topics - from technology to lifestyle. Find expert insights, analysis, and stories from independent voices in your favorite categories.",
-    images: ["/categories-og.jpg"],
+    title: "Travel Categories & Destinations | Travel Wing Blog",
+    description: "Discover amazing travel destinations and expert travel guides. Find inspiration for your next adventure with our curated travel categories and insider tips.",
+    images: ["/travel-categories-og.jpg"],
+    creator: "@travelwing",
+    site: "@travelwing"
   },
   alternates: {
-    canonical: "https://yourplatform.com/categories",
+    canonical: "https://travelwing.com/categories",
   }
 };
 
@@ -79,11 +84,11 @@ export default async function CategoriesPage() {
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10 py-16">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-              Explore Our Categories
+              Explore Travel Categories
             </h1>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Dive into our carefully curated categories. From technology to lifestyle, 
-              find the content that matches your interests.
+              Discover incredible destinations and travel experiences. From backpacking adventures 
+              to luxury escapes, find the perfect travel inspiration for your next journey.
             </p>
           </div>
         </div>
@@ -129,7 +134,7 @@ export default async function CategoriesPage() {
                   )}
 
                   <div className="mt-4 text-sm text-blue-300 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    View Articles →
+                    Explore Destination →
                   </div>
                 </div>
 
@@ -143,8 +148,8 @@ export default async function CategoriesPage() {
         {categories.length === 0 && (
           <div className="text-center py-12">
             <BookOpenIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-semibold text-gray-900">No categories</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating some categories.</p>
+            <h3 className="mt-2 text-sm font-semibold text-gray-900">No destinations yet</h3>
+            <p className="mt-1 text-sm text-gray-500">Check back soon for exciting travel destinations.</p>
           </div>
         )}
       </div>
@@ -155,13 +160,17 @@ export default async function CategoriesPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "Content Categories",
-            description: "Explore our diverse collection of article categories and topics",
-            url: "https://yourplatform.com/categories",
+            name: "Travel Categories & Destinations",
+            description: "Explore travel destinations, guides and tips across various categories",
+            url: "https://travelwing.com/categories",
             publisher: {
               "@type": "Organization",
-              name: "Independent Journalism Platform",
-              url: "https://yourplatform.com"
+              name: "Travel Wing",
+              url: "https://travelwing.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://travelwing.com/logo.png"
+              }
             },
             breadcrumb: {
               "@type": "BreadcrumbList",
@@ -170,13 +179,13 @@ export default async function CategoriesPage() {
                   "@type": "ListItem",
                   position: 1,
                   name: "Home",
-                  item: "https://yourplatform.com"
+                  item: "https://travelwing.com"
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
-                  name: "Categories",
-                  item: "https://yourplatform.com/categories"
+                  name: "Travel Categories",
+                  item: "https://travelwing.com/categories"
                 }
               ]
             }

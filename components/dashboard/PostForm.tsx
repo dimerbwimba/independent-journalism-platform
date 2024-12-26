@@ -6,11 +6,18 @@ import PreviewPost from "./PreviewPost";
 import MDEditor from "@uiw/react-md-editor";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
 interface Category {
   id: string;
   name: string;
   slug: string;
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
 }
 
 interface Post {
@@ -22,6 +29,7 @@ interface Post {
   image?: string;
   published?: boolean;
   categories?: Category[];
+  faqs: FAQ[];
 }
 
 interface PostFormProps {
@@ -39,7 +47,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [isImageValid, setIsImageValid] = useState(false);
+  // const [isImageValid, setIsImageValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [content, setContent] = useState(post?.content || "");
 
@@ -53,6 +61,9 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
     image: post?.image || "",
   });
 
+  const [faqs, setFaqs] = useState<FAQ[]>(post?.faqs || [{ question: '', answer: '' }]);
+  const [imageError, setImageError] = useState<string | null>(null)
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -62,10 +73,10 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
       formData.title.trim() !== "" &&
       formData.content.trim() !== "" &&
       formData.categoryIds.length > 0 &&
-      (formData.image === "" || isImageValid); // Image is optional but must be valid if provided
+      formData.image.trim() !== "" && validateImageUrl(formData.image)
 
     setIsFormValid(isValid);
-  }, [formData, isImageValid]);
+  }, [formData]);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, content }));
@@ -84,39 +95,62 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
   };
 
   const validateImageUrl = (url: string) => {
-    if (!url) {
-      return true // Empty URL is valid (image is optional)
-    }
-
-    try {
-      new URL(url) // Basic URL validation
-      const isImageUrl = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)
-
-      if (!isImageUrl) {
-        return false
-      }
-
-      return true
-    } catch {
+    if (!url) return true // Allow empty URL
+    if (!url.startsWith('https://i.ibb.co/')) {
+      setImageError('Please use a valid image URL from imgbb.com')
       return false
     }
+    setImageError(null)
+    return true
   }
 
+  const handleAddFaq = () => {
+    setFaqs([...faqs, { question: '', answer: '' }]);
+  };
+
+  const handleRemoveFaq = (index: number) => {
+    setFaqs(faqs.filter((_, i) => i !== index));
+  };
+
+  const handleFaqChange = (index: number, field: keyof FAQ, value: string) => {
+    const newFaqs = [...faqs];
+    newFaqs[index] = { ...newFaqs[index], [field]: value };
+    setFaqs(newFaqs);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     setError(null);
+
+    if (faqs.some(faq => !faq.question || !faq.answer)) {
+      setError('At least one complete FAQ is required');
+      setIsLoading(false);
+      return;
+    }
+
+    if (faqs.some(faq => faq.question.length > 70)) {
+      setError('FAQ questions must be under 40 characters');
+      setIsLoading(false);
+      return;
+    }
+
+    if (faqs.some(faq => faq.answer.length > 200)) {
+      setError('FAQ answers must be under 100 characters');
+      setIsLoading(false);
+      return;
+    }
 
     if (formData.categoryIds.length === 0) {
       setError("Please select at least one category");
       return;
     }
 
-    setIsLoading(true);
+    if (!validateImageUrl(formData.image)) return
 
     try {
       const response = await fetch(
-        post ? `/api/posts/${post.id}` : "/api/posts",
+        post ? `/api/posts/${post.id}/update` : "/api/posts",
         {
           method: post ? "PUT" : "POST",
           headers: {
@@ -125,6 +159,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
           body: JSON.stringify({
             ...formData,
             categories: formData.categoryIds,
+            faqs
           }),
         }
       );
@@ -240,34 +275,50 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Image URL
+            <div className="space-y-2">
+              <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                Featured Image URL
               </label>
-              <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => {
-                      const url = e.target.value.trim()
-                      const isValid = validateImageUrl(url)
-                      setFormData(prev => ({ ...prev, image: url }))
-                      setIsImageValid(isValid)
-                      if (!isValid && url) {
-                        setError('Please enter a valid image URL (jpg, jpeg, png, webp, gif, svg)')
-                      } else {
-                        setError(null)
-                      }
-                    }}
-                    placeholder="https://example.com/image.jpg"
-                    className={`mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:outline-none focus:ring-blue-500 ${isImageValid ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
-                      }`}
-                  />
-                  {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
-                </div>
-                <div className="text-xs text-gray-500">
-                  Supported formats: JPG, JPEG, PNG, WebP, GIF, SVG
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  id="image"
+                  name="image"
+                  value={formData.image}
+                  onChange={(e) => {
+                    setFormData({ ...formData, image: e.target.value })
+                    validateImageUrl(e.target.value)
+                  }}
+                  className={cn(
+                    "mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500",
+                    imageError && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                  )}
+                />
+                {imageError && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <ExclamationCircleIcon className="h-4 w-4" />
+                    {imageError}
+                  </p>
+                )}
+                <div className="rounded-md bg-blue-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <InformationCircleIcon className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-blue-800">
+                        How to add an image:
+                      </h3>
+                      <div className="mt-2 text-sm text-blue-700">
+                        <ol className="list-decimal list-inside space-y-1">
+                          <li>Go to <a href="https://imgbb.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">imgbb.com</a></li>
+                          <li>Upload your image (32 MB limit)</li>
+                          <li>After upload, copy the <strong>Direct link</strong> (starts with https://i.ibb.co/)</li>
+                          <li>Paste the link in this field</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -303,16 +354,22 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Categories
-            </label>
+          <div className=" bg-white p-5 rounded ">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium text-gray-700">
+                Categories
+              </label>
+              <span className="text-xs text-red-500">* Required</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-1 mb-3">
+              Select at least one category to publish your post. For better monetization opportunities, we recommend choosing a focused category that best matches your content.
+            </p>
             <div className="mt-1">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                 {categories.map((category) => (
                   <label
                     key={category.id}
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50 transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -324,6 +381,72 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
                   </label>
                 ))}
               </div>
+            </div>
+            {formData.categoryIds.length === 0 && (
+              <p className="text-sm text-amber-600 mt-2">
+                Please select at least one category before publishing
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium text-gray-900">FAQs</h3>
+              <button
+                type="button"
+                onClick={handleAddFaq}
+                className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <PlusIcon className="h-4 w-4 mr-1.5" />
+                Add FAQ
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Question ({70 - faq.question.length} characters left)
+                        </label>
+                        {faqs.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFaq(index)}
+                            className="text-sm text-red-600 hover:text-red-700"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        maxLength={70}
+                        value={faq.question}
+                        onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Answer ({200 - faq.answer.length} characters left)
+                      </label>
+                      <textarea
+                        maxLength={200}
+                        value={faq.answer}
+                        onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
+                        rows={5}
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${category.name} Articles | Independent Journalism Platform`,
+    title: `${category.name} Articles | Independent Travel Blog`,
     description: category.description || `Explore our collection of articles about ${category.name}. Find expert insights, analysis, and stories from independent voices.`,
     keywords: [
       category.name.toLowerCase(),
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       "expert analysis"
     ],
     openGraph: {
-      title: `${category.name} Articles | Independent Journalism Platform`,
+      title: `${category.name} Articles | Independent Travel Blog`,
       description: category.description || `Explore our collection of articles about ${category.name}. Find expert insights, analysis, and stories from independent voices.`,
       url: `https://yourplatform.com/categories/${category.slug}`,
       images: [
@@ -90,12 +90,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
     twitter: {
       card: "summary_large_image",
-      title: `${category.name} Articles | Independent Journalism Platform`,
+      title: `${category.name} Articles | Independent Travel Blog`,
       description: category.description || `Explore our collection of articles about ${category.name}. Find expert insights, analysis, and stories from independent voices.`,
       images: [category.image || "/default-category-og.jpg"],
     },
     alternates: {
-      canonical: `https://yourplatform.com/categories/${category.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/categories/${category.slug}`,
     }
   };
 }
@@ -115,7 +115,7 @@ export default async function CategoryPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Category Header with Image */}
-      <section className="relative h-[60vh] min-h-[500px] bg-gray-900">
+      <section className="relative h-[60vh] min-h-[550px] bg-gray-900">
         {category.image ? (
           <Image
             src={category.image}
@@ -131,8 +131,8 @@ export default async function CategoryPage({
         {/* Content Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40" />
         
-        <div className="relative h-full max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
-          <div className="flex flex-col justify-end h-full pb-20">
+        <div className="relative h-full max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10 pt-10">
+          <div className="flex flex-col justify-end h-full pb-20 pt-4">
             <div className="flex items-center space-x-2 text-blue-400 mb-4">
               <Link href="/categories" className="hover:text-blue-300 transition-colors">
                 Categories

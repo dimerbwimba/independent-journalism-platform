@@ -36,7 +36,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   return (
     <MainLayout>
       {!isDashboard && <MainNav />}
-      <main className={!isDashboard ? "pt-12" : ""}>
+      <main className={!isDashboard ? "" : ""}>
         {children}
       </main>
       {!isDashboard && <Footer />}

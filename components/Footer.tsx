@@ -193,11 +193,11 @@ export default function Footer() {
         <div className="relative flex flex-col sm:flex-row justify-center items-center gap-4 text-center py-8 backdrop-blur-sm">
           <div className="flex flex-wrap items-center justify-center gap-4 text-gray-500">
             <p className="text-sm">
-              &copy; {currentYear} Independent Journalism Platform
+              &copy; {currentYear} Independent Blog
             </p>
             <div className="hidden sm:block text-gray-300">•</div>
             <span className="text-sm bg-gradient-to-r from-blue-600/10 to-purple-600/10 px-4 py-1.5 rounded-full">
-              Made with ❤️ in DRC
+              Made with ❤️ By Dimer
             </span>
           </div>
         </div>
@@ -231,7 +231,7 @@ export default function Footer() {
               ],
               contactPoint: {
                 "@type": "ContactPoint",
-                email: "contact@yourplatform.com",
+                email: "next191996@gmail.com",
                 contactType: "customer service",
               },
             }),

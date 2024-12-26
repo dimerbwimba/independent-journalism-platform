@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline"
 
 export const metadata: Metadata = {
-  title: "Content Monetization | Independent Journalism Platform",
+  title: "Content Monetization | Independent Travel Blog",
   description: "Learn how to monetize your content on our platform. Discover our transparent revenue sharing model, eligibility requirements, and payment processes.",
   keywords: [
     "content monetization",
@@ -25,21 +25,21 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Bwimba Mihandgo Dimer" }],
   creator: "Bwimba Mihandgo Dimer",
-  publisher: "Independent Journalism Platform",
+  publisher: "Independent Travel Blog",
   openGraph: {
-    title: "Content Monetization | Independent Journalism Platform",
+    title: "Content Monetization | Independent Travel Blog",
     description: "Learn how to monetize your content on our platform. Discover our transparent revenue sharing model, eligibility requirements, and payment processes.",
-    url: "https://yourplatform.com/monetization",
-    siteName: "Independent Journalism Platform",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/monetization`,
+    siteName: "Independent Travel Blog",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Content Monetization | Independent Journalism Platform",
+    title: "Content Monetization | Independent Travel Blog",
     description: "Learn how to monetize your content and earn from your articles.",
-    creator: "@yourplatform",
-    site: "@yourplatform",
+    creator: "@travelwing",
+    site: "@travelwing",
   },
 }
 

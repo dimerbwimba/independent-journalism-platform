@@ -24,7 +24,8 @@ export async function PUT(
       content,
       image,
       published,
-      categories
+      categories,
+      faqs
     } = await req.json()
 
     // Verify post ownership or admin status
@@ -81,6 +82,21 @@ export async function PUT(
       }
     }
 
+    if (faqs && Array.isArray(faqs)) {
+      // Delete existing FAQs
+      await prisma.fAQ.deleteMany({
+        where: { postId: id }
+      })
+
+      // Create new FAQs
+      await prisma.fAQ.createMany({
+        data: faqs.map(faq => ({
+          question: faq.question,
+          answer: faq.answer,
+          postId: id
+        }))
+      })
+    }
     // Update post
     const updatedPost = await prisma.post.update({
       where: { id },

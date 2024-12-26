@@ -11,6 +11,7 @@ import ViewCounter from "@/components/ViewCounter";
 import NewsletterForm from "@/components/NewsletterForm";
 import ReportArticleButton from '@/components/article/ReportArticleButton'
 import SaveArticleButton from "@/components/article/SaveArticleButton";
+// import ArticleFAQs from '@/components/article/ArticleFAQs'
 
 interface Category {
   id: string;
@@ -33,7 +34,11 @@ interface RelatedPost {
   author: Author;
   categories: Category[];
 }
-
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+}
 interface Post {
   id: string;
   title: string;
@@ -52,6 +57,7 @@ interface Post {
   shares: Record<string, number>;
   viewCount: number;
   saved: boolean;
+  faqs: FAQ[];
 }
 
 async function getArticle(slug: string) {
@@ -95,13 +101,13 @@ export async function generateMetadata({
     article.categories?.map((c) => c.name).join(", ") || "General";
 
   return {
-    title: `${article.seoTitle} | Independent Journalism Platform`,
+    title: `${article.seoTitle} `,
     description:
       article.description ||
-      `Read ${article.title} by ${authorName}. Discover quality content about ${categories} on Independent Journalism Platform.`,
+      `Read ${article.title} by ${authorName}. Discover quality content about ${categories} on our travel blog.`,
     keywords: [
       ...(article.categories?.map((c) => c?.name?.toLowerCase()) || []),
-      "independent journalism",
+      "travel blog",
       "expert insights",
       authorName.toLowerCase(),
       "quality content",
@@ -113,7 +119,7 @@ export async function generateMetadata({
       description:
         article.description || `Read ${article.title} by ${authorName}`,
       type: "article",
-      url: `https://yourplatform.com/article/${article.slug}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/article/${article.slug}`,
       images: [
         {
           url: article.image || "/default-article-og.jpg",
@@ -135,7 +141,7 @@ export async function generateMetadata({
       creator: "@yourplatform",
     },
     alternates: {
-      canonical: `https://yourplatform.com/article/${article.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/article/${article.slug}`,
     },
   };
 }
@@ -291,17 +297,17 @@ export default async function ArticlePage({
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
+            {/* <ArticleFAQs faqs={post.faqs} /> */}
         </div>
       </div>
-      {/* Categories */}
 
-      {/* Comments Section */}
       <div
         id="comments"
         className="max-w-[1400px] mx-auto lg:px-96 md:px-20 px-10 py-4 border-t border-gray-100"
       >
         <div className="max-w-3xl mx-auto">
           <div className="flex justify-between items-center">
+            {/* Categories */}
             {post.categories?.length > 0 && (
               <div className=" py-4">
                 <div className="max-w-3xl mx-auto">
@@ -321,6 +327,7 @@ export default async function ArticlePage({
             )}
             <ReportArticleButton postId={post.id} />
           </div>
+          {/* Comments Section */}
           <CommentSection postId={post.id} currentUser={session?.user} />
         </div>
       </div>
@@ -416,12 +423,12 @@ export default async function ArticlePage({
               name: "Independent Journalism Platform",
               logo: {
                 "@type": "ImageObject",
-                url: "https://yourplatform.com/logo.png",
+                url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
               },
             },
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://yourplatform.com/article/${post.slug}`,
+              "@id": `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/article/${post.slug}`,
             },
             articleSection: post.categories?.[0]?.name || "General",
             keywords: post.categories?.map((c) => c.name).join(", "),
@@ -454,24 +461,35 @@ export default async function ArticlePage({
                   "@type": "ListItem",
                   position: 1,
                   name: "Home",
-                  item: "https://yourplatform.com",
+                  item: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`,
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
                   name: post.categories?.[0]?.name || "Articles",
                   item: post.categories?.[0]?.slug
-                    ? `https://yourplatform.com/categories/${post.categories[0].slug}`
-                    : "https://yourplatform.com/articles",
+                    ? `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/categories/${post.categories[0].slug}`
+                    : `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/`,
                 },
                 {
                   "@type": "ListItem",
                   position: 3,
                   name: post.title,
-                  item: `https://yourplatform.com/article/${post.slug}`,
+                  item: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/article/${post.slug}`,
                 },
               ],
             },
+            mainEntity: {
+              "@type": "FAQPage",
+              mainEntity: post.faqs.map(faq => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer
+                }
+              }))
+            }
           }),
         }}
       />

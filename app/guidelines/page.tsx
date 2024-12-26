@@ -9,13 +9,36 @@ import {
 } from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
-  title: "Content Guidelines | Independent Journalism Platform",
+  title: "Content Guidelines | Independent Travel Blog",
   description: "Our comprehensive guidelines for content creation, community standards, and monetization policies.",
+  keywords: "content guidelines, community standards, monetization policies, travel blog, content creation",
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
   openGraph: {
-    title: "Content Guidelines | Independent Journalism Platform",
+    title: "Content Guidelines | Independent Travel Blog",
     description: "Our comprehensive guidelines for content creation, community standards, and monetization policies.",
-    url: "https://yourplatform.com/guidelines",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/guidelines`,
+    type: "website",
+    locale: "en_US",
+    siteName: "Independent Travel Blog",
+    images: [
+      {
+        url: "/guidelines-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Independent Travel Blog Content Guidelines"
+      }
+    ]
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Content Guidelines | Independent Travel Blog",
+    description: "Our comprehensive guidelines for content creation, community standards, and monetization policies.",
+    images: ["/guidelines-og.jpg"]
+  },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/guidelines`
+  }
 };
 
 export default function GuidelinesPage() {

@@ -19,6 +19,7 @@ export async function GET(
         published: true,
       },
       include: {
+        faqs: true,
         comments: {
           select: {
             id: true,

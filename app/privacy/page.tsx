@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Independent Journalism Platform",
+  title: "Privacy Policy | Independent Travel Blog",
   description: "Our privacy policy explains how we collect, use, and protect your personal information, ensuring transparency and control over your data while using our platform.",
   keywords: [
     "privacy policy",
@@ -22,16 +22,17 @@ export const metadata: Metadata = {
     "data rights",
     "information collection",
     "data storage",
-    "privacy protection"
+    "privacy protection",
+    "travel blog"
   ],
   authors: [{ name: "Bwimba Mihandgo Dimer" }],
   creator: "Bwimba Mihandgo Dimer",
-  publisher: "Independent Journalism Platform",
+  publisher: "Independent Travel Blog",
   openGraph: {
-    title: "Privacy Policy | Independent Journalism Platform",
+    title: "Privacy Policy | Independent Travel Blog",
     description: "Our privacy policy explains how we collect, use, and protect your personal information, ensuring transparency and control over your data.",
-    url: "https://yourplatform.com/privacy",
-    siteName: "Independent Journalism Platform",
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/privacy`,
+    siteName: "Independent Travel Blog",
     locale: "en_US",
     type: "website",
     images: [
@@ -39,20 +40,20 @@ export const metadata: Metadata = {
         url: "/privacy-og.jpg",
         width: 1200,
         height: 630,
-        alt: "Privacy Policy - Independent Journalism Platform",
+        alt: "Privacy Policy - Independent Travel Blog",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy | Independent Journalism Platform",
+    title: "Privacy Policy | Independent Travel Blog",
     description: "Our privacy policy explains how we collect, use, and protect your personal information.",
     images: ["/privacy-og.jpg"],
-    creator: "@yourplatform",
-    site: "@yourplatform",
+    creator: "@travelwing",
+    site: "@travelwing",
   },
   alternates: {
-    canonical: "https://yourplatform.com/privacy",
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/privacy`,
   },
   robots: {
     index: true,

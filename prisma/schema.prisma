@@ -124,6 +124,14 @@ model Post {
   views       PostView[]
   reports     Report[]
   savedBy     SavedArticle[]
+  faqs        FAQ[]
+}
+model FAQ {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  question  String
+  answer    String
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
 }
 
 model Video {
