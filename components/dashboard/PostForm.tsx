@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PreviewPost from "./PreviewPost";
 import MDEditor from "@uiw/react-md-editor";
-import { useSession } from "next-auth/react";
+// //import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
@@ -40,8 +40,8 @@ interface PostFormProps {
 export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
   const router = useRouter();
 
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "admin";
+  // const { data: session } = useSession();
+  // const isAdmin = session?.user?.role === "admin";
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -322,19 +322,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
                 </div>
               </div>
             </div>
-            {isAdmin && <div className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.published}
-                onChange={(e) =>
-                  setFormData({ ...formData, published: e.target.checked })
-                }
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <label className="ml-2 block text-sm text-gray-900">
-                Publish this post
-              </label>
-            </div>}
+          
 
 
           </div>
@@ -449,7 +437,58 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
               ))}
             </div>
           </div>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+              <div className="flex items-center flex-1">
+                <input
+                  type="checkbox"
+                  id="publishStatus"
+                  checked={formData.published}
+                  onChange={(e) =>
+                    setFormData({ ...formData, published: e.target.checked })
+                  }
+                  className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  aria-describedby="publish-description"
+                />
+                <label htmlFor="publishStatus" className="ml-3 flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-900">Publish Post</span>
+                </label>
+              </div>
+            </div>
 
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-800 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                Publishing Options
+              </h4>
+              <ul className="space-y-2 text-sm text-blue-700">
+                <li className="flex items-center">
+                  <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Check to submit your post for review and publishing
+                </li>
+                <li className="flex items-center">
+                  <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Uncheck to save as draft for later editing
+                </li>
+                <li className="flex items-center">
+                  <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Drafts can be accessed and edited anytime
+                </li>
+              </ul>
+            </div>
+          </div>
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
           <div className="flex justify-end space-x-4">

@@ -15,7 +15,7 @@ export async function GET(
         posts: {
           where: {
             post: {
-              published: true
+              status: 'APPROVED'
             }
           },
           include: {

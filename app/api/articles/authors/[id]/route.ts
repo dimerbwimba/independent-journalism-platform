@@ -23,7 +23,7 @@ export async function GET(
           }
         },
         posts: {
-          where: { published: true },
+          where: { status: 'APPROVED' },
           select: {
             id: true,
             title: true,
@@ -46,7 +46,7 @@ export async function GET(
         _count: {
           select: {
             posts: {
-              where: { published: true }
+              where: { status: 'APPROVED' }
             },
             comments: true
           }

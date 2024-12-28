@@ -12,7 +12,7 @@ export async function GET() {
           include: {
             post: {
               select: {
-                published: true
+                status: true
               }
             }
           }
@@ -23,7 +23,7 @@ export async function GET() {
     // Get latest published articles
     const latestArticles = await prisma.post.findMany({
       where: {
-        published: true
+        status: 'APPROVED'
       },
       include: {
         categories: {
@@ -61,7 +61,7 @@ export async function GET() {
     // Get featured article with slug
     const featuredArticle = await prisma.post.findFirst({
       where: {
-        published: true,
+        status: 'APPROVED',
         image: {
           not: null
         }
@@ -105,7 +105,7 @@ export async function GET() {
       slug: category.slug,
       description: category.description,
       image: category.image,
-      postCount: category.posts.filter(cp => cp.post.published).length
+      postCount: category.posts.filter(cp => cp.post.status === 'APPROVED').length
     }))
 
     // Get popular articles from the past week
@@ -114,7 +114,7 @@ export async function GET() {
 
     const popularArticles = await prisma.post.findMany({
       where: {
-        published: true,
+        status: 'APPROVED',
         createdAt: {
           gte: oneWeekAgoPosts
         }

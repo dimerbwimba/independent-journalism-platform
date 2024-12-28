@@ -15,8 +15,7 @@ export async function GET() {
 
     const posts = await prisma.post.findMany({
       where: {
-        published: false,
-        status: 'PENDING'
+        status: "PENDING"
       },
       select: {
         id: true,

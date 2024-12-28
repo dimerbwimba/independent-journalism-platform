@@ -16,7 +16,7 @@ export async function GET(
     const post = await prisma.post.findFirst({
       where: {
         slug: slug,
-        published: true,
+        status: 'APPROVED',
       },
       include: {
         faqs: true,

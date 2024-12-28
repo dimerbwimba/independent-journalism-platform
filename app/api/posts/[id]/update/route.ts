@@ -66,6 +66,7 @@ export async function PUT(
       content,
       image,
       published,
+     
       categories: {
         deleteMany: {},
         create: categories.map((categoryId: string) => ({
@@ -73,6 +74,7 @@ export async function PUT(
         }))
       }
     } : {
+    
       content,
       categories: {
         deleteMany: {},
@@ -100,7 +102,7 @@ export async function PUT(
     // Update post
     const updatedPost = await prisma.post.update({
       where: { id },
-      data: updateData,
+      data: { ...updateData, status: published ? 'PENDING' : 'DRAFT' },
       include: {
         categories: {
           include: {

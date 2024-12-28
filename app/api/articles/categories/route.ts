@@ -9,7 +9,7 @@ export async function GET() {
           include: {
             post: {
               select: {
-                published: true
+                status: true
               }
             }
           }
@@ -26,7 +26,7 @@ export async function GET() {
       slug: category.slug,
       description: category.description,
       image: category.image,
-      postCount: category.posts.filter(cp => cp.post.published).length
+      postCount: category.posts.filter(cp => cp.post.status === 'APPROVED').length
     }))
 
     return NextResponse.json({
