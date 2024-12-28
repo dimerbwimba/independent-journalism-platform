@@ -11,7 +11,6 @@ import {
   UserIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline'
-import ViewCounter from '@/components/ViewCounter'
 import { marked } from 'marked'
 
 interface Post {
@@ -22,6 +21,7 @@ interface Post {
   image?: string
   published: boolean
   createdAt: string
+  views: number
   author: {
     name: string
     image?: string
@@ -100,7 +100,7 @@ export default function SinglePostPage({ params }: { params: Promise<{ slug: str
           </div>
           <span>•</span>
           <div className="flex items-center">
-            <ViewCounter postId={post.id} />
+            {post.views} views
           </div>
         </div>
 

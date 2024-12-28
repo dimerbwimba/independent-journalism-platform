@@ -104,7 +104,7 @@ export default function PostsList({ searchQuery }: PostsListProps) {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium line-clamp-1 text-gray-900">
                     {post.title}
                   </h3>
                   <div className="mt-1 flex items-center gap-4 text-sm text-gray-500">
@@ -135,6 +135,13 @@ export default function PostsList({ searchQuery }: PostsListProps) {
                 >
                   <PencilIcon className="h-4 w-4 mr-1" />
                   Edit
+                </Link>
+                <Link
+                  href={`/dashboard/posts/single/${post.slug}`}
+                  className="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                >
+                  <EyeIcon className="h-4 w-4 mr-1" />
+                  Preview
                 </Link>
                 <button
                   onClick={() => handleDelete(post.id)}
