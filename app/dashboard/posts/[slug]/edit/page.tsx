@@ -25,6 +25,7 @@ interface Faq {
   answer: string
 }
 interface Category {
+  categoryId:string;
   id: string
   name: string
   slug: string
