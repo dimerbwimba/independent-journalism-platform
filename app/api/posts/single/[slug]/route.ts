@@ -24,6 +24,11 @@ export async function GET(
       },
       include: {
         faqs: true,
+        categories:{
+          select:{
+            categoryId: true
+          }
+        },
         author: {
           select: {
             name: true,

@@ -10,6 +10,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
 interface Category {
+  categoryId:string;
   id: string;
   name: string;
   slug: string;
@@ -39,15 +40,10 @@ interface PostFormProps {
 
 export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
   const router = useRouter();
-
-  // const { data: session } = useSession();
-  // const isAdmin = session?.user?.role === "admin";
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  // const [isImageValid, setIsImageValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [content, setContent] = useState(post?.content || "");
 
@@ -57,7 +53,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
     description: post?.description || "",
     content: post?.content || "",
     published: post?.published || false,
-    categoryIds: post?.categories?.map((cat) => cat.id) || [],
+    categoryIds: post?.categories?.map((cat) => cat.categoryId) || [],
     image: post?.image || "",
   });
 
@@ -355,18 +351,21 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
             <div className="mt-1">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                 {categories.map((category) => (
-                  <label
+                  <button
                     key={category.id}
-                    className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50 transition-colors"
+                    onClick={() => handleCategoryChange(category.id)}
+                    className={cn(
+                      "w-full p-2 rounded-md text-sm text-left transition-colors",
+                      "hover:bg-gray-50",
+                      formData.categoryIds.includes(category.id)
+                        ? "bg-blue-50 text-blue-700 border-2 border-blue-500"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    )}
+                    type="button"
+                    aria-pressed={formData.categoryIds.includes(category.id)}
                   >
-                    <input
-                      type="checkbox"
-                      checked={formData.categoryIds.includes(category.id)}
-                      onChange={() => handleCategoryChange(category.id)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">{category.name}</span>
-                  </label>
+                    {category.name}
+                  </button>
                 ))}
               </div>
             </div>
