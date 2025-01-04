@@ -109,47 +109,48 @@ export default async function CategoriesPage() {
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 
                 {/* Category Info */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold group-hover:text-blue-400 transition-colors">
+                <div className="absolute inset-x-0 bottom-0 px-4 flex flex-col">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
                       {category.name}
                     </h3>
-                    <div className="flex items-center space-x-1 bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
-                      <BookOpenIcon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{category.postCount}</span>
+                    <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <BookOpenIcon className="h-4 w-4 text-white" />
+                      <span className="text-sm font-medium text-white">{category.postCount}</span>
                     </div>
                   </div>
                   {category.description && (
-                    <p className="mt-2 text-sm text-gray-200 line-clamp-2 group-hover:text-white/90 transition-colors">
+                    <p className="text-sm text-gray-100 line-clamp-2 mb-3">
                       {category.description}
                     </p>
                   )}
 
-                  <div className="mt-4 text-sm text-blue-300 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    Explore Destination →
-                  </div>
+                  <span className="inline-flex items-center text-sm font-medium text-blue-300 opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                    Explore Destination
+                    <span className="ml-1 transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
                 </div>
 
-                {/* Hover Effect Overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </Link>
           ))}
         </div>
 
         {categories.length === 0 && (
-          <div className="text-center py-12">
-            <BookOpenIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-semibold text-gray-900">No destinations yet</h3>
-            <p className="mt-1 text-sm text-gray-500">Check back soon for exciting travel destinations.</p>
+          <div className="flex flex-col items-center justify-center py-12">
+            <BookOpenIcon className="h-12 w-12 text-gray-400" />
+            <h3 className="mt-3 text-base font-semibold text-gray-900">No destinations yet</h3>
+            <p className="mt-2 text-sm text-gray-500">Check back soon for exciting travel destinations.</p>
           </div>
         )}
       </div>

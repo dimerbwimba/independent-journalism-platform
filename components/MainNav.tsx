@@ -33,15 +33,18 @@ export default function MainNav() {
 
   return (
     <nav className={cn(
-      'fixed top-0  z-50 rounded-b-3xl flex w-full justify-center text-white transition duration-200',
+      'fixed top-0  z-50  flex w-full justify-center text-white transition duration-200',
       isScrolled ? 'bg-white text-gray-800 shadow-md' : ' bg-gray-800 text-white'
     )}>
       <div className="h-12 w-full max-w-7xl items-center rounded-b-2xl bg-bluewood px-6 md:rounded-b-3xl md:px-8 min-[1342px]:box-content">
         <div className="flex  pt-2 w-full items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo.png" alt="Travel Wing Logo" width={52} height={52} />
-            <span className="text-xl font-bold ">Travel Wing</span>
+            <div className="flex items-center space-x-2 h-10 w-10">
+              <Image src="/logo.png" alt="Logo" width={52} height={52} />
+
+            </div>
+            <span className="text-xl hidden sm:flex font-bold ">Travel Wing</span>
           </Link>
 
           {/* Navigation Links */}
@@ -51,12 +54,6 @@ export default function MainNav() {
               className=" transition-colors"
             >
               Categories
-            </Link>
-            <Link
-              href="/about"
-              className=" transition-colors"
-            >
-              About
             </Link>
           </div>
 
@@ -201,7 +198,7 @@ export default function MainNav() {
                     <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
                     <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
                   </svg>
-                  <span className="text-gray-700">Continue with Google</span>
+                  <span className="text-gray-700">sign in</span>
                 </button>
               </>
             )}

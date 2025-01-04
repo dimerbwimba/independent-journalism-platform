@@ -2,13 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { ShieldCheckIcon } from "@heroicons/react/24/solid";
-import { ArrowTrendingUpIcon, EyeIcon } from "@heroicons/react/24/outline";
-import {
-  BanknotesIcon,
-  ChartBarIcon,
-  UserGroupIcon,
-  RocketLaunchIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
+import AccommodationSection from '@/components/AccommodationSection';
+
 
 // SEO Metadata
 export const metadata: Metadata = {
@@ -185,135 +181,62 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-     
-      {/* Add Creator Banner Section - after Featured Article */}
-      <section className="py-16 bg-gradient-to-br from-green-600 via-green-700 to-green-800">
-        <div className=" relative max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-white space-y-6">
-              <div>
-                <span className="inline-block px-3 py-1 bg-blue-500/30 rounded-full text-sm font-medium mb-4">
-                  Creator Program
-                </span>
-                <h2 className="text-4xl font-bold mb-4">
-                  Turn Your Passion into Profit
-                </h2>
-                <p className="text-blue-100 text-lg">
-                  Join our creator community and start earning from your
-                  content. We offer competitive payouts and comprehensive
-                  support to help you succeed.
-                </p>
-              </div>
+       {/* Popular This Week Section */}
+       <section className="pt-12 mt-5 bg-white">
+        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Popular This Week</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover the most engaging content that&apos;s making waves this week
+            </p>
+          </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-blue-100">
-                    <BanknotesIcon className="w-5 h-5" />
-                    <span className="font-medium">$0.30</span>
-                  </div>
-                  <p className="text-sm text-blue-200">Per 1,000 views</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-blue-100">
-                    <ChartBarIcon className="w-5 h-5" />
-                    <span className="font-medium">Monthly</span>
-                  </div>
-                  <p className="text-sm text-blue-200">Automatic payouts</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-medium text-lg">Benefits Include:</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center">
-                      <UserGroupIcon className="w-4 h-4 text-blue-100" />
-                    </div>
-                    <span className="text-blue-100">
-                      Access to creator community
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
+            {popularArticles.map((article: Article) => (
+              <article
+                key={article.id}
+                className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="relative h-48">
+                  {article.image ? (
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-200" />
+                  )}
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      {article.viewCount} views
                     </span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center">
-                      <ChartBarIcon className="w-4 h-4 text-blue-100" />
-                    </div>
-                    <span className="text-blue-100">
-                      Detailed analytics dashboard
+                    <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      {article.reactionCount} reactions
                     </span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center">
-                      <RocketLaunchIcon className="w-4 h-4 text-blue-100" />
-                    </div>
-                    <span className="text-blue-100">
-                      Priority content promotion
-                    </span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="pt-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center px-6 py-3 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors group"
-                >
-                  Start Creating
-                  <RocketLaunchIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
-            <div className="relative md:block">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-transparent opacity-50 rounded-2xl" />
-              <div className="relative bg-blue-500/20 backdrop-blur-sm rounded-2xl p-8 border border-blue-400/20">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                        <EyeIcon className="w-6 h-6 text-blue-100" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-blue-200">Monthly Views</p>
-                        <p className="text-2xl font-bold text-white">10,000+</p>
-                      </div>
-                    </div>
-                    <ChartBarIcon className="w-12 h-12 text-blue-300/30" />
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                        <BanknotesIcon className="w-6 h-6 text-blue-100" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-blue-200">Earnings</p>
-                        <p className="text-2xl font-bold text-white">$50+</p>
-                      </div>
-                    </div>
-                    <span className="text-sm text-blue-200">per month</span>
-                  </div>
-
-                  <div className="p-4 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-lg backdrop-blur-sm border border-blue-400/10">
-                    <p className="text-sm text-blue-100">
-                      &quot;I&apos;ve been able to share my knowledge and earn
-                      consistently. The platform&apos;s support has been incredible!&quot;
-                    </p>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-500/20" />
-                      <div>
-                        <p className="text-sm font-medium text-white">
-                          Sarah K.
-                        </p>
-                        <p className="text-xs text-blue-200">Tech Writer</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+                <div className="p-2">
+                  {article.categories[0] && (
+                    <span className="text-sm text-blue-600 font-semibold">
+                      {article.categories[0].name}
+                    </span>
+                  )}
+                  <Link href={`/article/${article.slug}`}>
+                    <h3 className="text-xl font-bold line-clamp-2 mt-2 mb-3 hover:text-blue-600 transition-colors">
+                      {article.title}
+                    </h3>
+                  </Link>
+                  <p className="text-gray-600 line-clamp-2 mb-4">
+                    {article.description}
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
-
        {/* Featured Article */}
        {featuredArticle && (
         <section className="bg-white">
@@ -344,6 +267,53 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+       {/* Categories Section */}
+       <section className=" pt-12 bg-gray-50">
+        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
+          <div className="text-center  mb-12">
+            <h2 className="text-3xl font-bold mb-4">Explore Categories</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Dive deep into your favorite topics. From cutting-edge technology
+              to business strategies, we&apos;ve got you covered with expert insights
+              and analysis.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
+            {categories.map((category: Category) => (
+              <Link
+                key={category.id}
+                href={`/categories/${category.slug}`}
+                className="group block"
+              >
+                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="relative h-48">
+                    {category.image ? (
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gray-200" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <h3 className="text-xl font-bold mb-1">
+                        {category.name}
+                      </h3>
+                      <span className="text-sm opacity-90">
+                        {category.postCount} articles
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* Popular Creators Section */}
       <section className="pt-12 bg-gray-50">
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
@@ -408,64 +378,6 @@ export default async function HomePage() {
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* Popular This Week Section */}
-      <section className="pt-12 bg-white">
-        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Popular This Week</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover the most engaging content that&apos;s making waves this week
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
-            {popularArticles.map((article: Article) => (
-              <article
-                key={article.id}
-                className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="relative h-48">
-                  {article.image ? (
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-200" />
-                  )}
-                  <div className="absolute top-2 right-2 flex gap-2">
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                      {article.viewCount} views
-                    </span>
-                    <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                      {article.reactionCount} reactions
-                    </span>
-                  </div>
-                </div>
-                <div className="p-2">
-                  {article.categories[0] && (
-                    <span className="text-sm text-blue-600 font-semibold">
-                      {article.categories[0].name}
-                    </span>
-                  )}
-                  <Link href={`/article/${article.slug}`}>
-                    <h3 className="text-xl font-bold line-clamp-2 mt-2 mb-3 hover:text-blue-600 transition-colors">
-                      {article.title}
-                    </h3>
-                  </Link>
-                  <p className="text-gray-600 line-clamp-2 mb-4">
-                    {article.description}
-                  </p>
-                </div>
-              </article>
             ))}
           </div>
         </div>
@@ -593,59 +505,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
-          <div className="text-center  mb-12">
-            <h2 className="text-3xl font-bold mb-4">Explore Categories</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Dive deep into your favorite topics. From cutting-edge technology
-              to business strategies, we&apos;ve got you covered with expert insights
-              and analysis.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
-            {categories.map((category: Category) => (
-              <Link
-                key={category.id}
-                href={`/categories/${category.slug}`}
-                className="group block"
-              >
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative h-48">
-                    {category.image ? (
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gray-200" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-xl font-bold mb-1">
-                        {category.name}
-                      </h3>
-                      <span className="text-sm opacity-90">
-                        {category.postCount} articles
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* Latest Articles Grid */}
       <section className="">
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
           <h2 className="text-2xl font-bold mb-8">Latest Stories</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-gray-800 pb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 border-b-2 border-gray-800 pb-12">
             {latestArticles.map((article: Article) => (
               <article
                 key={article.id}
@@ -683,7 +549,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
+ {/* Add the accommodation section */}
+ <AccommodationSection />
       {/* Add this before closing main tag */}
       <script
         type="application/ld+json"
@@ -743,6 +610,8 @@ export default async function HomePage() {
           }),
         }}
       />
+
+     
     </main>
   );
 }
