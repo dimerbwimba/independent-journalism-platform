@@ -35,7 +35,8 @@ const AVAILABLE_ROLES = [
 ]
 
 export default function UserRoleDetailPage() {
-  const { id } = useParams()
+  const params = useParams<{ id: string }>()
+  const id = params?.id
   const router = useRouter()
   const { data: session } = useSession()
   const [user, setUser] = useState<UserDetail | null>(null)

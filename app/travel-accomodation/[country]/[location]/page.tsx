@@ -12,6 +12,7 @@ import {
   InformationCircleIcon,
   GlobeAmericasIcon
 } from '@heroicons/react/24/outline'
+import CountryArticles from '@/components/CountryArticles'
 
 interface Hotel {
   name: string
@@ -214,8 +215,8 @@ export default async function LocationPage({ params }: { params: Promise<{ locat
                   </li>
                   <ChevronRightIcon className="h-4 w-4 text-gray-400" />
                   <li>
-                    <Link href="/hotels" className="text-gray-500 hover:text-gray-700">
-                      Hotels
+                    <Link href={`/travel-accomodation/${country}`} className="text-gray-500 hover:text-gray-700">
+                      {country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, l => l.toUpperCase())}
                     </Link>
                   </li>
                   <ChevronRightIcon className="h-4 w-4 text-gray-400" />
@@ -323,7 +324,7 @@ export default async function LocationPage({ params }: { params: Promise<{ locat
                 </div>
               </div>
             )}
-
+            <CountryArticles country={country}/>
             {/* Location Highlights */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow-sm p-6">

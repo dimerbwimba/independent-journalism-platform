@@ -215,7 +215,7 @@ export default function EnquiriesListSideBar() {
               </div>
             ) : (
               filteredItems.map((item) => {
-                const isActive = pathname.includes(item.id)
+                const isActive = pathname?.includes(item.id)
                 
                 return (
                   <Link

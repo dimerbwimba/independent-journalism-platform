@@ -49,7 +49,7 @@ export default function EditPostPage() {
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`/api/posts/single/${params.slug}`)
+        const response = await fetch(`/api/posts/single/${params?.slug}`)
         const data = await response.json()
 
         if (!response.ok) {
@@ -71,7 +71,7 @@ export default function EditPostPage() {
     }
 
     fetchPost()
-  }, [session, router, params.slug, isAdmin])
+  }, [session, router, params?.slug, isAdmin])
 
   if (isLoading) {
     return <LoadingPlaceholder />

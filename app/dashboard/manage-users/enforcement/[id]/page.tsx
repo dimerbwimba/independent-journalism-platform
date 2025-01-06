@@ -35,7 +35,8 @@ interface UserDetail {
 type ActionType = 'WARNING' | 'SUSPENSION' | 'BAN' | 'RESOLVE'
 
 export default function UserEnforcementPage() {
-  const { id } = useParams()
+  const params = useParams<{ id: string }>()
+  const id = params?.id
   const router = useRouter()
   const { data: session } = useSession()
   const [user, setUser] = useState<UserDetail | null>(null)

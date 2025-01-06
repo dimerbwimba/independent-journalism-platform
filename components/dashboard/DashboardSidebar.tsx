@@ -139,7 +139,7 @@ export function DashboardSidebar() {
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navigationWithCount.map((item) => {
-          const isActive = pathname.startsWith(item.href)
+          const isActive = pathname?.startsWith(item.href)
           
           return (
             <Link

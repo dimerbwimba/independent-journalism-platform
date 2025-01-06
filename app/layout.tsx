@@ -20,8 +20,8 @@ function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isDashboard = pathname?.startsWith('/dashboard')
   const searchParams = useSearchParams()
-  const message = searchParams.get('message')
-  const type = searchParams.get('type')
+  const message = searchParams?.get('message')
+  const type = searchParams?.get('type')
 
   useEffect(() => {
     if (message) {

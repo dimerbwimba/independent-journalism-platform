@@ -48,6 +48,7 @@ export default function CommunicationDetailPage() {
 
   useEffect(() => {
     const fetchCommunication = async () => {
+      if (!params) return;
       try {
         const response = await fetch(`/api/manage-users/communication/${params.id}`)
         if (!response.ok) throw new Error('Failed to fetch communication')
@@ -63,13 +64,14 @@ export default function CommunicationDetailPage() {
     }
 
     fetchCommunication()
-  }, [params.id])
+  }, [params])
 
   const handleStatusUpdate = async (status: string) => {
     if (!communication) return
     
     setIsUpdating(true)
     try {
+      if (!params) return;
       const response = await fetch(`/api/manage-users/communication/${params.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

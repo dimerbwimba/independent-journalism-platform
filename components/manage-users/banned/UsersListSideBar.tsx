@@ -162,7 +162,7 @@ export function UsersListSideBar() {
                     href={`/dashboard/manage-users/banned/${user.id}`}
                     className={cn(
                       "flex items-center gap-3 p-3 rounded-md text-sm transition-colors",
-                      pathname.includes(user.id) 
+                      pathname?.includes(user.id) 
                         ? "bg-gray-100 text-gray-900" 
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     )}
