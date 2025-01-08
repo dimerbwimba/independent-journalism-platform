@@ -74,7 +74,7 @@ const CountryArticles: React.FC<CountryArticlesProps> = ({ country }) => {
                 {articles.map((article) => (
                     <Link
                         key={article.id}
-                        href={`/travel-accomodation/${article.slug}`}
+                        href={`/article/${article.slug}`}
                         className="relative group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white h-[300px]"
                     >
                         <div className="h-full w-full relative">

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BookOpenIcon } from '@heroicons/react/24/outline'
+import AccommodationSection from "@/components/AccommodationSection";
 
 interface Author {
   name: string
@@ -146,7 +147,7 @@ export default async function CategoryPage({
             </h1>
             
             {category.description && (
-              <p className="text-xl text-gray-300 max-w-2xl">
+              <p className="text-xl text-gray-300 max-w-2xl line-clamp-6">
                 {category.description}
               </p>
             )}
@@ -215,8 +216,11 @@ export default async function CategoryPage({
             </div>
           )}
         </div>
+        
       </section>
-
+      <section>
+      <AccommodationSection/>
+      </section>
       {/* Add Schema.org structured data */}
       <script
         type="application/ld+json"

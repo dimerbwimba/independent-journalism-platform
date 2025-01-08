@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from 'next/image'
 import Link from 'next/link'
 import { BookOpenIcon } from '@heroicons/react/24/outline'
+import AccommodationSection from "@/components/AccommodationSection";
 
 interface Category {
   id: string
@@ -145,7 +146,6 @@ export default async function CategoriesPage() {
             </Link>
           ))}
         </div>
-
         {categories.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12">
             <BookOpenIcon className="h-12 w-12 text-gray-400" />
@@ -154,6 +154,7 @@ export default async function CategoriesPage() {
           </div>
         )}
       </div>
+        <AccommodationSection/>
 
       <script
         type="application/ld+json"
@@ -163,14 +164,14 @@ export default async function CategoriesPage() {
             "@type": "CollectionPage",
             name: "Travel Categories & Destinations",
             description: "Explore travel destinations, guides and tips across various categories",
-            url: "https://travelwing.com/categories",
+            url: process.env.NEXT_PUBLIC_APP_URL || "https://travelwing.com/categories",
             publisher: {
               "@type": "Organization",
               name: "Travel Wing",
-              url: "https://travelwing.com",
+              url: process.env.NEXT_PUBLIC_APP_URL || "https://travelwing.com",
               logo: {
                 "@type": "ImageObject",
-                url: "https://travelwing.com/logo.png"
+                url: process.env.NEXT_PUBLIC_APP_URL || "https://travelwing.com/logo.png"
               }
             },
             breadcrumb: {
@@ -180,13 +181,13 @@ export default async function CategoriesPage() {
                   "@type": "ListItem",
                   position: 1,
                   name: "Home",
-                  item: "https://travelwing.com"
+                  item: process.env.NEXT_PUBLIC_APP_URL || "https://travelwing.com"
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
                   name: "Travel Categories",
-                  item: "https://travelwing.com/categories"
+                  item: process.env.NEXT_PUBLIC_APP_URL || "https://travelwing.com/categories"
                 }
               ]
             }
