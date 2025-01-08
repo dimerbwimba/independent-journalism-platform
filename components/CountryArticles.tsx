@@ -1,13 +1,14 @@
 'use client'
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Article {
     id: string;
     title: string;
     description: string;
     url: string;
-    slug:string;
+    slug: string;
     image: string; // Assuming each article has an image URL
     views: number;
     reactions: number;
@@ -71,28 +72,35 @@ const CountryArticles: React.FC<CountryArticlesProps> = ({ country }) => {
             <h2 className="text-2xl font-bold mb-4">Articles about {country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, l => l.toUpperCase())}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {articles.map((article) => (
-                    <div key={article.id} className="border-b border-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
-                        <div className="relative h-48">
-                            <div className="absolute top-2 right-2 flex gap-2">
-                                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                    {article.views} views
-                                </span>
-                                <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                    {article.reactions} reactions
-                                </span>
+                    <Link
+                        key={article.id}
+                        href={`/travel-accomodation/${article.slug}`}
+                        className="relative group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white h-[300px]"
+                    >
+                        <div className="h-full w-full relative">
+                            <Image
+                                src={article.image}
+                                alt={`${article.title} Hotels`}
+                                fill
+                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                priority={true}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                            <div className="absolute inset-0 flex flex-col justify-end p-6">
+                                <h3 className="text-2xl font-bold text-white drop-shadow-sm">{article.title}</h3>
+                                <p className="text-sm text-white/90 mt-2 line-clamp-2 drop-shadow-sm">
+                                    {article.description}
+                                </p>
+
+                                <div className="mt-4 inline-flex items-center text-sm font-medium text-white translate-y-0 group-hover:translate-x-1 transition-all duration-300">
+                                    Read More
+                                    <span className="ml-2">→</span>
+                                </div>
                             </div>
-                            <img src={article.image} alt={article.title} className="w-full mb-4 rounded-md object-cover" />
                         </div>
-                        <div className="mt-4">
-                            <Link className="text-blue-600 hover:text-blue-800 font-medium mt-2 inline-block" href={`/article/${article.slug}`}>
-                                <h3 className="text-lg font-semibold mb-2 text-gray-900">{article.title}</h3>
-                            </Link>
-                            <p className="text-gray-600 line-clamp-2">{article.description}</p>
-                            <Link className="text-blue-600 hover:text-blue-800 font-medium mt-2 inline-block" href={`/article/${article.slug}`}>
-                                Read More
-                            </Link>
-                        </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>

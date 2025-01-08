@@ -9,6 +9,7 @@ export async function GET(
   try {
     const articles = await prisma.post.findMany({
       where: {
+        status: 'APPROVED',
         slug: {
           contains: country
         }
