@@ -110,6 +110,7 @@ model Post {
   seoTitle    String?
   description String?
   content     String
+  country     String?
   image       String?
   published   Boolean             @default(false)
   createdAt   DateTime            @default(now())

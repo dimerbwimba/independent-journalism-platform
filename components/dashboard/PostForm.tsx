@@ -10,7 +10,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
 interface Category {
-  categoryId:string;
+  categoryId: string;
   id: string;
   name: string;
   slug: string;
@@ -28,6 +28,7 @@ interface Post {
   description?: string;
   content: string;
   image?: string;
+  country?: string;
   published?: boolean;
   categories?: Category[];
   faqs: FAQ[];
@@ -55,6 +56,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
     published: post?.published || false,
     categoryIds: post?.categories?.map((cat) => cat.categoryId) || [],
     image: post?.image || "",
+    country: post?.country || ""
   });
 
   const [faqs, setFaqs] = useState<FAQ[]>(post?.faqs || [{ question: '', answer: '' }]);
@@ -66,6 +68,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
 
   useEffect(() => {
     const isValid =
+      formData.country.trim() !== "" &&
       formData.title.trim() !== "" &&
       formData.content.trim() !== "" &&
       formData.categoryIds.length > 0 &&
@@ -118,6 +121,12 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    if (formData.country.trim() === "") {
+      setError("Please select a country");
+      setIsLoading(false);
+      return;
+    }
 
     if (faqs.some(faq => !faq.question || !faq.answer)) {
       setError('At least one complete FAQ is required');
@@ -271,6 +280,8 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
               </p>
             </div>
 
+
+
             <div className="space-y-2">
               <label htmlFor="image" className="block text-sm font-medium text-gray-700">
                 Featured Image URL
@@ -318,11 +329,21 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
                 </div>
               </div>
             </div>
-          
-
-
           </div>
-
+          <div>
+            <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+              Country 
+              <p className="text-sm text-gray-500 mt-1">Enter the country this post is about. This helps readers find location-specific content.</p>
+            </label>
+            <input
+              type="text"
+              id="country"
+              value={formData.country}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              placeholder="Enter the country name"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Content
@@ -417,7 +438,7 @@ export default function PostForm({ post, isAdminEdit = false }: PostFormProps) {
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Answer ({200 - faq.answer.length} characters left)

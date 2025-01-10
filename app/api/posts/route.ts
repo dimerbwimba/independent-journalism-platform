@@ -22,10 +22,13 @@ export async function POST(req: Request) {
 
     const data = await req.json()
 
-    const { title, content, description, image, published, faqs, categories, seoTitle } = data
+    const { title, country, content, description, image, published, faqs, categories, seoTitle } = data
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 })
+    }
+    if (!country) {
+      return NextResponse.json({ error: "Country is required" }, { status: 400 })
     }
     if (!content) {
       return NextResponse.json({ error: "Content is required" }, { status: 400 })
@@ -46,6 +49,7 @@ export async function POST(req: Request) {
     const post = await prisma.post.create({
       data: {
         title,
+        country,
         content,
         seoTitle,
         description,
