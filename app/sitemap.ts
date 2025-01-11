@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import prisma from '@/lib/prisma'
+import { countries, CountryData } from '@/data/countries'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all published posts
@@ -100,13 +101,70 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic routes for authors
   const authorRoutes = authors.map((author) => ({
-    url: `${baseUrl}/authors/${author.id}`,
+    url: `${baseUrl}/author/${author.id}`,
     lastModified: author.updatedAt,
     changeFrequency: 'weekly' as const,
     priority: 0.6,
   }))
-
   
+  const countryRoutes = countries.filter(country => country.status === 'active').map((country) => ({
+    url: `${baseUrl}/travel-accomodation/${country.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
 
-  return [...staticRoutes, ...postRoutes, ...categoryRoutes, ...authorRoutes]
+  const countryLocationRoutes = await Promise.all(
+    countries
+      .filter(country => country.status === 'active')
+      .map(async (country) => {
+        const countryData = await import(`@/data/${country.slug.toLowerCase().replace(/-/g, "_")}_data.json`);
+        const countryKey = country.slug.toLowerCase().replace(/-/g, "_");
+        const regionData = countryData[countryKey];
+
+        return regionData.region_hotels.map((location:{name:string}) => ({
+          url: `${baseUrl}/travel-accomodation/${country.slug}/${location.name.toLowerCase().replace(/\s+/g, '-')}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.6,
+        }));
+      })
+  ).then(arrays => arrays.flat());
+
+  const resortRoutes = await Promise.all(
+    countries
+      .filter(country => country.status === 'active')
+      .map(async (country) => {
+        const countryData = await import(`@/data/${country.slug.toLowerCase().replace(/-/g, "_")}_data.json`);
+        const countryKey = country.slug.toLowerCase().replace(/-/g, "_");
+        const regionData = countryData[countryKey];
+
+        return regionData.all_inclusive_resorts.map((resort:{title:string}) => ({
+          url: `${baseUrl}/travel-accomodation/${country.slug}/resort/${resort.title.toLowerCase().replace(/\s+/g, '-')}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.6,
+        }));
+      })
+  ).then(arrays => arrays.flat());
+
+  const topBestResortForACountry= countries.filter(country => country.status === 'active').map((country) => ({
+    url: `${baseUrl}/travel-accomodation/${country.slug}/resort/top-best`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
+
+  const allRoutes = [
+    ...staticRoutes, 
+    ...postRoutes, 
+    ...categoryRoutes, 
+    ...authorRoutes, 
+    ...countryRoutes, 
+    ...countryLocationRoutes,
+    ...resortRoutes,
+    ...topBestResortForACountry
+  ]
+
+  return allRoutes
 } 

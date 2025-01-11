@@ -70,7 +70,7 @@ const CountryArticles: React.FC<CountryArticlesProps> = ({ country }) => {
     return (
         <div className="bg-white rounded-lg my-8 border border-gray-800 p-6">
             <h2 className="text-2xl font-bold mb-4">Articles about {country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, l => l.toUpperCase())}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 {articles.map((article) => (
                     <Link
                         key={article.id}

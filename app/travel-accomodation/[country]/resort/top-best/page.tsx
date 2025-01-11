@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
 import { StarIcon, MapPinIcon, ChevronRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import CountryArticles from "@/components/CountryArticles";
 
 interface Resort {
     name: string;
@@ -20,10 +21,12 @@ interface Resort {
 export async function generateMetadata({ params }: { params: Promise<{ country: string }> }): Promise<Metadata> {
     const { country } = await params;
     const formattedCountry = country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, (l: string) => l.toUpperCase());
-
+    const allResorts = await import(`@/data/${country.toLowerCase().replace("-", "_")}_data.json`);
+    const data = allResorts[country.toLowerCase().replace(/-/g, "_")];
+    const resorts = data.all_inclusive_resorts?.slice(0, 18) || [];
     return {
-        title: `15 Best Resorts in ${formattedCountry} | Ultimate Guide ${new Date().getFullYear()}`,
-        description: `The top 15 luxury resorts in ${formattedCountry}. From all-inclusive beachfront properties to boutique mountain retreats. Expert reviews and recommendations.`,
+        title: `${resorts.length} Best Resorts in ${formattedCountry} | Ultimate Guide ${new Date().getFullYear()}`,
+        description: `The top ${resorts.length} luxury resorts in ${formattedCountry}. From all-inclusive beachfront properties to boutique mountain retreats. Expert reviews and recommendations.`,
         keywords: [
             `best resorts in ${formattedCountry}`,
             `luxury hotels ${formattedCountry}`,
@@ -36,6 +39,23 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
             'family resorts',
             'boutique hotels'
         ],
+        openGraph: {
+            title: `${resorts.length} Best Resorts in ${formattedCountry} | Ultimate Guide ${new Date().getFullYear()}`,
+            description: `The top ${resorts.length} luxury resorts in ${formattedCountry}. From all-inclusive beachfront properties to boutique mountain retreats. Expert reviews and recommendations.`,
+            images: [resorts[0]?.images[0]?.image],
+        },
+        twitter: {
+            title: `${resorts.length} Best Resorts in ${formattedCountry} | Ultimate Guide ${new Date().getFullYear()}`,
+            description: `The top ${resorts.length} luxury resorts in ${formattedCountry}. From all-inclusive beachfront properties to boutique mountain retreats. Expert reviews and recommendations.`,
+            images: [resorts[0]?.images[0]?.image],
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_URL}/travel-accomodation/${country.toLowerCase().replace("-", "_")}/resort/top-best`,
+        },
     };
 }
 
@@ -60,7 +80,7 @@ export default async function TopResortsPage({ params }: { params: Promise<{ cou
                     <div className="max-w-[1400px] mx-auto lg:px-80 md:px-20 px-10 py-16">
                         <div className="">
                             <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-                                15 Best Resorts in {formattedCountry}: Ultimate Guide {new Date().getFullYear()}
+                                {resorts.length} Best Resorts in {formattedCountry}: Ultimate Guide {new Date().getFullYear()}
                             </h1>
                             <p className="mt-4 text-lg text-gray-600">
                                 The most luxurious and highly-rated resorts in {formattedCountry}. From beachfront paradises to mountain retreats, find your perfect stay.
@@ -131,7 +151,7 @@ export default async function TopResortsPage({ params }: { params: Promise<{ cou
                                 </div>
                                 <div>
                                     <p className="text-2xl  font-bold text-gray-900">
-                                        {Object.keys(data.locations || {}).length}
+                                        {Object.keys(data.region_hotels || {}).length}
                                     </p>
                                     <p className="text-sm text-gray-600">unique locations</p>
                                 </div>
@@ -144,9 +164,9 @@ export default async function TopResortsPage({ params }: { params: Promise<{ cou
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-6 text-xs text-gray-500">
-                            Source: Analysis of {data.all_inclusive_resorts.length} top resorts in {formattedCountry}, {new Date().getFullYear()}
-                        </div>
+                        <p className="mt-6 text-xs text-gray-500">
+                            Source: Analysis of 399 top resorts in {formattedCountry}, {new Date().getFullYear()}
+                        </p>
                     </div>
 
 
@@ -248,6 +268,8 @@ export default async function TopResortsPage({ params }: { params: Promise<{ cou
                             </article>
                         ))}
                     </div>
+                    <CountryArticles country={country} />
+                    {/* Frequently Asked Questions */}
                     <div className="prose max-w-none mt-16">
                         <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions about {formattedCountry} Resorts</h2>
                         <div className="space-y-6">

@@ -40,7 +40,8 @@ export async function GET() {
       orderBy: {
         createdAt: 'desc'
       },
-      take: 3
+      skip: 3,
+      take: 23
     })
 
     // Format latest articles

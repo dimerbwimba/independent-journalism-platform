@@ -266,7 +266,17 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
               </Link>
             ))}
           </div>
+
           <CountryArticles country={country} />
+          <div className="mt-8 mb-8 bg-white rounded-lg border border-gray-800 p-6 text-center">
+                        <h2 className="text-2xl font-bold mb-6">
+                            Visit Our 15 Top Best Resort in {country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, l => l.toUpperCase())}
+                        </h2>
+                        <p className="text-lg text-gray-700 mb-4">Experience the ultimate luxury getaway at our top-rated resort. Enjoy world-class amenities, gourmet dining, and breathtaking views.</p>
+                        <Link href={`/travel-accomodation/${country}/resort/top-best`} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Explore Our Top Resort
+                        </Link>
+                    </div>
           {/* All-Inclusive Resorts Section */}
           {data.all_inclusive_resorts && data.all_inclusive_resorts.length > 0 && (
             <section className="mt-16">
@@ -473,7 +483,7 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
               </a>
 
               <Link
-                href={`/travel-guides/${country}`}
+                href={`/article/${country}-travel-guides`}
                 className="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-3">
@@ -481,7 +491,7 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
-                <h3 className="font-medium text-gray-900">Travel Guide</h3>
+                <h3 className="font-medium text-gray-900">Travel Guide to {country.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, l => l.toUpperCase())}</h3>
                 <p className="text-sm text-gray-500 text-center mt-1">Essential tips & info</p>
               </Link>
             </div>
