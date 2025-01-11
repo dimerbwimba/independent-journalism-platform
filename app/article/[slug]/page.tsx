@@ -29,6 +29,7 @@ interface RelatedPost {
   id: string;
   slug: string;
   title: string;
+  country: string;
   description?: string;
   image?: string;
   author: Author;
@@ -48,6 +49,7 @@ interface Post {
   content: string;
   image: string;
   createdAt: string;
+  country: string;
   updatedAt: string;
   author: Author;
   comments: number;
@@ -296,8 +298,65 @@ export default async function ArticlePage({
               "
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
-          </div>
-            <ArticleFAQs faqs={post.faqs} />
+          </div>  {/* Related Articles */}
+          {post.relatedPosts?.length > 0 && (
+            <section className=" border-t border-gray-800 pt-6">
+              <div className="">
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                  Related Articles
+                </h2>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                  {post.relatedPosts.map((article) => (
+                    <Link
+                      key={article.id}
+                      href={`/article/${article.slug}`}
+                      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                    >
+                      <div className="relative h-48">
+                        {article.image ? (
+                          <Image
+                            src={article.image}
+                            alt={article.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-50" />
+                        )}
+                      </div>
+
+                      <div className="p-6">
+                        {article.categories[0] && (
+                          <span className="text-sm text-blue-600 font-semibold">
+                            {article.categories[0].name}
+                          </span>
+                        )}
+
+                        <h3 className="mt-2 text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                          {article.title}
+                        </h3>
+                        {article.country && (
+                          <div className="text-sm mt-2 text-blue-600 font-semibold">
+                            {article.country}
+                          </div>
+                        )}
+
+                        {article.description && (
+                          <p className="mt-2 text-gray-600 line-clamp-2">
+                            {article.description}
+                          </p>
+                        )}
+
+
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+          <ArticleFAQs faqs={post.faqs} />
         </div>
       </div>
 
@@ -332,74 +391,7 @@ export default async function ArticlePage({
         </div>
       </div>
 
-      {/* Related Articles */}
-      {post.relatedPosts?.length > 0 && (
-        <section className="bg-gray-50 py-16">
-          <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Related Articles
-            </h2>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {post.relatedPosts.map((article) => (
-                <Link
-                  key={article.id}
-                  href={`/article/${article.slug}`}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <div className="relative h-48">
-                    {article.image ? (
-                      <Image
-                        src={article.image}
-                        alt={article.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-50" />
-                    )}
-                  </div>
-
-                  <div className="p-6">
-                    {article.categories[0] && (
-                      <span className="text-sm text-blue-600 font-semibold">
-                        {article.categories[0].name}
-                      </span>
-                    )}
-
-                    <h3 className="mt-2 text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                      {article.title}
-                    </h3>
-
-                    {article.description && (
-                      <p className="mt-2 text-gray-600 line-clamp-2">
-                        {article.description}
-                      </p>
-                    )}
-
-                    <div className="mt-4 flex items-center text-sm text-gray-500">
-                      <div className="flex items-center">
-                        {article.author.image ? (
-                          <Image
-                            src={article.author.image}
-                            alt={article.author.name}
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                          />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-gray-200" />
-                        )}
-                        <span className="ml-2">{article.author.name}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Add Schema.org structured data */}
       <script

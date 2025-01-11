@@ -23,6 +23,7 @@ export async function PUT(
       description,
       content,
       image,
+      country,
       published,
       categories,
       faqs
@@ -37,7 +38,8 @@ export async function PUT(
         seoTitle: true,
         description: true,
         image: true,
-        published: true
+        published: true,
+        country: true
       }
     })
 
@@ -66,7 +68,7 @@ export async function PUT(
       content,
       image,
       published,
-     
+      country,
       categories: {
         deleteMany: {},
         create: categories.map((categoryId: string) => ({

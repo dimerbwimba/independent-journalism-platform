@@ -89,11 +89,18 @@ export async function GET(
       where: {
         published: true,
         id: { not: post.id }, // Exclude current post
-        categories: {
-          some: {
-            categoryId: { in: categoryIds }
+        OR: [
+          {
+            categories: {
+              some: {
+                categoryId: { in: categoryIds }
+              }
+            }
+          },
+          {
+            country: post.country
           }
-        }
+        ]
       },
       include: {
         author: {
@@ -129,6 +136,7 @@ export async function GET(
         slug: rp.slug,
         title: rp.title,
         description: rp.description,
+        country: rp.country,
         image: rp.image,
         author: rp.author,
         categories: rp.categories.map(pc => pc.category)
