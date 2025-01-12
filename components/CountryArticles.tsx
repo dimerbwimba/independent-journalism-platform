@@ -18,7 +18,7 @@ interface CountryArticlesProps {
     country: string;
 }
 
-const CountryArticles: React.FC<CountryArticlesProps> = ({ country }) => {
+const CountryArticles = ({ country }: CountryArticlesProps) => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

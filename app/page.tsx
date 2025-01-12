@@ -181,8 +181,8 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-       {/* Popular This Week Section */}
-       <section className="pt-12 mt-5 bg-white">
+      {/* Popular This Week Section */}
+      <section className="pt-12 mt-5 bg-white">
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Popular This Week</h2>
@@ -237,8 +237,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-       {/* Featured Article */}
-       {featuredArticle && (
+      {/* Featured Article */}
+      {featuredArticle && (
         <section className="bg-white">
           <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
             <div className="grid md:grid-cols-2 gap-12 border-b-2 border-gray-800 items-center py-12">
@@ -267,8 +267,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-       {/* Categories Section */}
-       <section className=" pt-12 bg-gray-50">
+      {/* Categories Section */}
+      <section className=" pt-12 bg-gray-50">
         <div className="max-w-[1400px] mx-auto lg:px-60 md:px-20 px-10">
           <div className="text-center  mb-12">
             <h2 className="text-3xl font-bold mb-4">Explore Categories</h2>
@@ -505,7 +505,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-     
+
 
       {/* Latest Articles Grid */}
       <section className="">
@@ -549,8 +549,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
- {/* Add the accommodation section */}
- <AccommodationSection />
+      {/* Add the accommodation section */}
+      <AccommodationSection />
       {/* Add this before closing main tag */}
       <script
         type="application/ld+json"
@@ -611,7 +611,7 @@ export default async function HomePage() {
         }}
       />
 
-     
+
     </main>
   );
 }

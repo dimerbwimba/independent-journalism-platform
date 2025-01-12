@@ -123,7 +123,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const regionData = countryData[countryKey];
 
         return regionData.region_hotels.map((location:{name:string}) => ({
-          url: `${baseUrl}/travel-accomodation/${country.slug}/${location.name.toLowerCase().replace(/\s+/g, '-')}`,
+          url: `${baseUrl}/travel/${country.slug}/${location.name.toLowerCase().replace(/\s+/g, '-')}`,
           lastModified: new Date(),
           changeFrequency: 'weekly' as const,
           priority: 0.6,
@@ -140,7 +140,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const regionData = countryData[countryKey];
 
         return regionData.all_inclusive_resorts.map((resort:{title:string}) => ({
-          url: `${baseUrl}/travel-accomodation/${country.slug}/resort/${resort.title.toLowerCase().replace(/\s+/g, '-')}`,
+          url: `${baseUrl}/travel/${country.slug}/resort/${resort.title.toLowerCase().replace(/\s+/g, '-')}`,
           lastModified: new Date(),
           changeFrequency: 'weekly' as const,
           priority: 0.6,
@@ -149,7 +149,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ).then(arrays => arrays.flat());
 
   const topBestResortForACountry= countries.filter(country => country.status === 'active').map((country) => ({
-    url: `${baseUrl}/travel-accomodation/${country.slug}/resort/top-best`,
+    url: `${baseUrl}/travel/${country.slug}/resort/top-best`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

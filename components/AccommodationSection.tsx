@@ -25,7 +25,7 @@ export default function AccommodationSection() {
           {activeCountries.map((country) => (
             <Link 
               key={country.id}
-              href={`/travel-accomodation/${country.slug}`}
+              href={`/travel/${country.slug}`}
               className="relative group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white h-[300px]"
             >
               <div className="h-full w-full relative">
