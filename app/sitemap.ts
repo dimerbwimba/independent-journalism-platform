@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import prisma from '@/lib/prisma'
-import { countries, CountryData } from '@/data/countries'
+import { countries } from '@/data/countries'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all published posts
