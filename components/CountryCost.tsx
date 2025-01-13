@@ -1,4 +1,4 @@
-import { ChartBarIcon, CurrencyDollarIcon, UsersIcon, InformationCircleIcon, StarIcon, UserGroupIcon, HomeIcon, HomeModernIcon, BuildingOffice2Icon, BuildingOfficeIcon, SparklesIcon, MapPinIcon, GlobeAltIcon, TruckIcon, TagIcon, Square3Stack3DIcon, SunIcon, MoonIcon, BeakerIcon, ShoppingBagIcon, ArrowTopRightOnSquareIcon, MapIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, CurrencyDollarIcon, UsersIcon, InformationCircleIcon, HomeIcon, HomeModernIcon, BuildingOffice2Icon, BuildingOfficeIcon, SparklesIcon, MapPinIcon, GlobeAltIcon, TruckIcon, TagIcon, Square3Stack3DIcon, SunIcon, MoonIcon, BeakerIcon, ShoppingBagIcon, ArrowTopRightOnSquareIcon, MapIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 interface CountryCostProps {
   country: string;
@@ -117,7 +117,7 @@ export default async function CountryCost({ country }: CountryCostProps) {
             </div>
             <div className="flex items-start gap-2">
               <p className="text-gray-900">
-                Planning an extended stay? Here's what you can expect to spend:
+                Planning an extended stay? Here&apos;s what you can expect to spend:
               </p>
             </div>
 
@@ -176,8 +176,8 @@ export default async function CountryCost({ country }: CountryCostProps) {
                 Travel Costs For Different Trip Durations in {country} ?
               </h2>
               <p className="mt-2 leading-relaxed text-gray-700">
-                Planning your trip budget? Here's a comprehensive breakdown of expected costs across different durations,
-                whether you're traveling solo or as a couple. These estimates include daily essentials like accommodation,
+                Planning your trip budget? Here&apos;s a comprehensive breakdown of expected costs across different durations,
+                whether you&apos;re traveling solo or as a couple. These estimates include daily essentials like accommodation,
                 meals, local transport, and popular activities to help you plan more effectively.
               </p>
               <div className="mt-4">
